@@ -342,7 +342,7 @@
         <div class="header">
             <div>
                 <h1><i class="fas fa-boxes"></i> Product Manager</h1>
-                <p style="color: var(--text-light); margin-top: 0.5rem;">Simple & Reliable - No backend needed</p>
+                <p style="color: var(--text-light); margin-top: 0.5rem;">Changes save automatically to GitHub</p>
             </div>
             <div class="actions">
                 <button class="btn btn-link" onclick="window.open('../index.html', '_blank')">
@@ -351,13 +351,41 @@
                 <button class="btn btn-success" onclick="openAddModal()">
                     <i class="fas fa-plus"></i> Add Product
                 </button>
-                <button class="btn btn-primary" onclick="saveProducts()">
-                    <i class="fas fa-download"></i> Download JSON
+                <button class="btn btn-link" onclick="openSettingsModal()">
+                    <i class="fas fa-cog"></i> Settings
                 </button>
             </div>
         </div>
 
         <div id="productsGrid" class="products-grid"></div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>GitHub Settings</h2>
+                <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="ghp_...">
+                <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
+                    Create a token at <a href="https://github.com/settings/tokens" target="_blank" style="color: var(--primary);">GitHub Settings</a> with 'repo' permissions
+                </p>
+            </div>
+            <div class="form-group">
+                <label>Repository Owner</label>
+                <input type="text" id="repoOwner" placeholder="NizarSH98">
+            </div>
+            <div class="form-group">
+                <label>Repository Name</label>
+                <input type="text" id="repoName" placeholder="shopping">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Settings
+            </button>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -519,33 +547,94 @@
 
             if (editIndex >= 0) {
                 products[editIndex] = product;
-                showMessage('success', 'Product updated!');
             } else {
                 products.push(product);
-                showMessage('success', 'Product added!');
             }
 
             renderProducts();
             closeModal();
+            saveToGitHub();
         }
 
         function deleteProduct(index) {
             if (!confirm('Delete this product?')) return;
             products.splice(index, 1);
             renderProducts();
-            showMessage('success', 'Product deleted!');
+            saveToGitHub();
         }
 
-        function saveProducts() {
-            const dataStr = JSON.stringify({ products }, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'products.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            showMessage('success', '✅ Downloaded! Replace data/products.json in your repo and push to GitHub.');
+        async function saveToGitHub() {
+            const settings = JSON.parse(localStorage.getItem('githubSettings') || '{}');
+            
+            if (!settings.token || !settings.owner || !settings.repo) {
+                showMessage('error', '⚙️ Please configure GitHub settings first');
+                setTimeout(() => openSettingsModal(), 1000);
+                return;
+            }
+
+            try {
+                showMessage('success', '💾 Saving to GitHub...');
+
+                // Get current file SHA
+                const fileUrl = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/data/products.json`;
+                const getResponse = await fetch(fileUrl, {
+                    headers: {
+                        'Authorization': `token ${settings.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                const fileData = await getResponse.json();
+                const sha = fileData.sha;
+
+                // Update file
+                const content = btoa(JSON.stringify({ products }, null, 2));
+                const updateResponse = await fetch(fileUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${settings.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Update products via admin',
+                        content: content,
+                        sha: sha
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    showMessage('success', '✅ Saved to GitHub! Changes will be live in 1-2 minutes.');
+                } else {
+                    const error = await updateResponse.json();
+                    showMessage('error', '❌ GitHub error: ' + error.message);
+                }
+            } catch (error) {
+                showMessage('error', '❌ Failed to save: ' + error.message);
+            }
+        }
+
+        function openSettingsModal() {
+            const settings = JSON.parse(localStorage.getItem('githubSettings') || '{}');
+            document.getElementById('githubToken').value = settings.token || '';
+            document.getElementById('repoOwner').value = settings.owner || 'NizarSH98';
+            document.getElementById('repoName').value = settings.repo || 'shopping';
+            document.getElementById('settingsModal').classList.add('show');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('show');
+        }
+
+        function saveSettings() {
+            const settings = {
+                token: document.getElementById('githubToken').value,
+                owner: document.getElementById('repoOwner').value,
+                repo: document.getElementById('repoName').value
+            };
+            localStorage.setItem('githubSettings', JSON.stringify(settings));
+            closeSettingsModal();
+            showMessage('success', '✅ Settings saved! You can now add/edit products.');
         }
 
         function showMessage(type, text) {
