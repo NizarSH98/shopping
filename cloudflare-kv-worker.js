@@ -215,13 +215,16 @@ async function handleRequest(request, env) {
     try {
       const { products } = await request.json();
       
-      if (!products) {
-        throw new Error('No products data provided');
+      if (!Array.isArray(products)) {
+        throw new Error('Products must be an array');
       }
+      
+      // Store as { products: [...] } structure
+      const dataToStore = { products };
       
       // Save to Cloudflare KV
       if (env.PRODUCTS_KV) {
-        await env.PRODUCTS_KV.put('products', JSON.stringify(products));
+        await env.PRODUCTS_KV.put('products', JSON.stringify(dataToStore));
       } else {
         throw new Error('KV storage not configured');
       }

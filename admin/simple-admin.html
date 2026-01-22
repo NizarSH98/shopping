@@ -594,7 +594,7 @@
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ products: { products: allProducts } })
+                    body: JSON.stringify({ products: allProducts })
                 });
                 
                 const data = await response.json();
