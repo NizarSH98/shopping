@@ -256,14 +256,9 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
                 </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-primary" onclick="importFromJSON()">
-                        <i class="fas fa-file-import"></i> Import JSON
-                    </button>
-                    <button class="btn-success" onclick="openAddModal()">
-                        <i class="fas fa-plus"></i> Add Product
-                    </button>
-                </div>
+                <button class="btn-success" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
             </div>
 
             <div id="productsContainer">
@@ -434,13 +429,38 @@
                         products = products.products;
                     }
                     allProducts = products || [];
-                    displayProducts(allProducts);
+                    
+                    // If no products, automatically import from JSON
+                    if (allProducts.length === 0) {
+                        await autoImportFromJSON();
+                    } else {
+                        displayProducts(allProducts);
+                    }
                 } else {
                     showMessage('error', '❌ Failed to load products');
                     document.getElementById('productsContainer').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load products</p></div>';
                 }
             } catch (error) {
                 showMessage('error', '❌ Error: ' + error.message);
+            }
+        }
+
+        async function autoImportFromJSON() {
+            try {
+                const response = await fetch('../data/products.json');
+                const data = await response.json();
+                
+                allProducts = data.products || [];
+                
+                if (allProducts.length > 0) {
+                    await saveToServer();
+                    showMessage('success', `✅ Automatically imported ${allProducts.length} products!`);
+                } else {
+                    displayProducts(allProducts);
+                }
+            } catch (error) {
+                console.error('Auto-import failed:', error);
+                displayProducts(allProducts);
             }
         }
 
@@ -505,25 +525,6 @@
                 (p.category || '').toLowerCase().includes(search)
             );
             displayProducts(filtered);
-        }
-
-        async function importFromJSON() {
-            if (!confirm('This will import products from data/products.json. Any existing products will be replaced. Continue?')) {
-                return;
-            }
-
-            try {
-                const response = await fetch('../data/products.json');
-                const data = await response.json();
-                
-                allProducts = data.products || [];
-                
-                await saveToServer();
-                
-                showMessage('success', `✅ Imported ${allProducts.length} products successfully!`);
-            } catch (error) {
-                showMessage('error', '❌ Failed to import: ' + error.message);
-            }
         }
 
         function openAddModal() {
