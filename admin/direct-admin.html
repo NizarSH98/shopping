@@ -364,9 +364,61 @@
                 opacity: 1;
             }
         }
+
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .login-box h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .login-box p {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h1><i class="fas fa-lock"></i> Admin Login</h1>
+            <p>Enter password to manage products</p>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required autofocus>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Screen -->
+    <div id="adminScreen" class="hidden">
     <div class="container">
         <div class="header">
             <div>
@@ -383,10 +435,14 @@
                 <button class="btn btn-link" onclick="openSettingsModal()">
                     <i class="fas fa-cog"></i> Settings
                 </button>
+                <button class="btn btn-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
 
         <div id="productsGrid" class="products-grid"></div>
+    </div>
     </div>
 
     <!-- Settings Modal -->
@@ -683,8 +739,39 @@
             setTimeout(() => msg.remove(), 5000);
         }
 
+        // Auth functions
+        const ADMIN_PASSWORD = 'admin123'; // Change this!
+
+        function login(e) {
+            e.preventDefault();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminAuth', 'true');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminScreen').classList.remove('hidden');
+                loadProducts();
+            } else {
+                showMessage('error', '❌ Invalid password');
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminAuth');
+            location.reload();
+        }
+
+        function checkAuth() {
+            if (sessionStorage.getItem('adminAuth') === 'true') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminScreen').classList.remove('hidden');
+                loadProducts();
+            }
+        }
+
         // Load on start
-        loadProducts();
+        checkAuth();
     </script>
 </body>
 </html>
