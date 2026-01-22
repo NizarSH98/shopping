@@ -18,11 +18,26 @@ export async function fetchProducts() {
         }
         
         const data = await response.json();
-        allProducts = data.products || [];
+        // Handle both direct array and {products: []} format
+        allProducts = data.products || data || [];
         
         return allProducts;
     } catch (error) {
         console.error('Error fetching products:', error);
+        
+        // Try fallback URL if available
+        if (CONFIG.site.fallbackDataUrl) {
+            try {
+                console.log('Trying fallback data source...');
+                const fallbackResponse = await fetch(CONFIG.site.fallbackDataUrl);
+                const fallbackData = await fallbackResponse.json();
+                allProducts = fallbackData.products || fallbackData || [];
+                return allProducts;
+            } catch (fallbackError) {
+                console.error('Fallback also failed:', fallbackError);
+            }
+        }
+        
         throw error;
     }
 }

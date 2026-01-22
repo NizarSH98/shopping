@@ -24,8 +24,10 @@ export const CONFIG = {
         // For project sites: '/repository-name'
         // For user/org sites: ''
         basePath: '',
-        // Product data source
-        productsDataUrl: './data/products.json'
+        // Product data source - use Worker API instead of JSON file
+        productsDataUrl: 'https://oauth-proxy.jabernizar98.workers.dev/api/products',
+        // Fallback to local JSON if Worker is unavailable
+        fallbackDataUrl: './data/products.json'
     },
 
     // Pagination & Display
