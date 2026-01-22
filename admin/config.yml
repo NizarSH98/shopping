@@ -9,8 +9,8 @@ backend:
   base_url: https://oauth-proxy.jabernizar98.workers.dev
 
 # Media Files Configuration
-media_folder: "assets/products"  # Where uploaded images will be stored
-public_folder: "./assets/products"  # Public path to media files
+media_folder: "assets/products"
+public_folder: "/shopping/assets/products"
 
 # Publish Mode
 publish_mode: editorial_workflow  # Enables draft/review workflow
