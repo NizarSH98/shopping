@@ -1,0 +1,200 @@
+{
+  "products": [
+    {
+      "id": "prod-001",
+      "name": "Wireless Bluetooth Headphones",
+      "description": "High-quality over-ear headphones with active noise cancellation, 30-hour battery life, and premium sound quality. Perfect for music lovers and professionals.",
+      "price": 79.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/headphones-1.jpg",
+        "./assets/products/headphones-2.jpg"
+      ],
+      "category": "Electronics",
+      "tags": ["audio", "wireless", "bluetooth", "headphones"],
+      "featured": true,
+      "in_stock": true,
+      "created_at": "2026-01-15T10:00:00Z",
+      "updated_at": "2026-01-20T14:30:00Z"
+    },
+    {
+      "id": "prod-002",
+      "name": "Organic Cotton T-Shirt",
+      "description": "Comfortable, breathable organic cotton t-shirt. Available in multiple colors. Eco-friendly and sustainably sourced.",
+      "price": 24.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/tshirt-1.jpg"
+      ],
+      "category": "Clothing",
+      "tags": ["clothing", "organic", "cotton", "tshirt"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-10T09:00:00Z",
+      "updated_at": "2026-01-18T11:20:00Z"
+    },
+    {
+      "id": "prod-003",
+      "name": "Stainless Steel Water Bottle",
+      "description": "Insulated stainless steel water bottle keeps drinks cold for 24 hours or hot for 12 hours. BPA-free, leak-proof design. 750ml capacity.",
+      "price": 29.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/bottle-1.jpg",
+        "./assets/products/bottle-2.jpg"
+      ],
+      "category": "Home & Kitchen",
+      "tags": ["bottle", "insulated", "stainless steel", "eco-friendly"],
+      "featured": true,
+      "in_stock": true,
+      "created_at": "2026-01-12T08:30:00Z",
+      "updated_at": "2026-01-19T16:45:00Z"
+    },
+    {
+      "id": "prod-004",
+      "name": "Yoga Mat with Carrying Strap",
+      "description": "Extra thick (6mm) non-slip yoga mat. Made from high-density foam with excellent cushioning. Includes carrying strap for easy transport.",
+      "price": 34.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/yoga-mat-1.jpg"
+      ],
+      "category": "Sports & Fitness",
+      "tags": ["yoga", "fitness", "exercise", "mat"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-14T12:00:00Z",
+      "updated_at": "2026-01-21T09:15:00Z"
+    },
+    {
+      "id": "prod-005",
+      "name": "Portable Power Bank 20000mAh",
+      "description": "High-capacity portable charger with dual USB ports and USB-C. Fast charging support for smartphones, tablets, and other devices.",
+      "price": 39.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/powerbank-1.jpg"
+      ],
+      "category": "Electronics",
+      "tags": ["charger", "powerbank", "portable", "usb"],
+      "featured": true,
+      "in_stock": false,
+      "created_at": "2026-01-11T14:20:00Z",
+      "updated_at": "2026-01-22T08:00:00Z"
+    },
+    {
+      "id": "prod-006",
+      "name": "LED Desk Lamp with USB Port",
+      "description": "Modern LED desk lamp with adjustable brightness, color temperature control, and built-in USB charging port. Energy-efficient and eye-friendly.",
+      "price": 45.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/lamp-1.jpg",
+        "./assets/products/lamp-2.jpg"
+      ],
+      "category": "Home & Kitchen",
+      "tags": ["lamp", "led", "desk", "lighting"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-13T10:45:00Z",
+      "updated_at": "2026-01-20T13:30:00Z"
+    },
+    {
+      "id": "prod-007",
+      "name": "Running Shoes - Men's",
+      "description": "Lightweight running shoes with responsive cushioning and breathable mesh upper. Designed for comfort during long runs.",
+      "price": 89.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/shoes-1.jpg"
+      ],
+      "category": "Sports & Fitness",
+      "tags": ["shoes", "running", "athletic", "mens"],
+      "featured": true,
+      "in_stock": true,
+      "created_at": "2026-01-09T11:30:00Z",
+      "updated_at": "2026-01-17T15:20:00Z"
+    },
+    {
+      "id": "prod-008",
+      "name": "Bamboo Cutting Board Set",
+      "description": "Set of 3 bamboo cutting boards in different sizes. Durable, eco-friendly, and naturally antimicrobial. Easy to clean and maintain.",
+      "price": 32.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/cutting-board-1.jpg"
+      ],
+      "category": "Home & Kitchen",
+      "tags": ["kitchen", "bamboo", "cutting board", "eco-friendly"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-16T09:00:00Z",
+      "updated_at": "2026-01-21T10:00:00Z"
+    },
+    {
+      "id": "prod-009",
+      "name": "Smart Watch Fitness Tracker",
+      "description": "Advanced fitness tracker with heart rate monitoring, sleep tracking, step counter, and smartphone notifications. Water-resistant up to 50m.",
+      "price": 129.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/smartwatch-1.jpg",
+        "./assets/products/smartwatch-2.jpg"
+      ],
+      "category": "Electronics",
+      "tags": ["smartwatch", "fitness", "tracker", "wearable"],
+      "featured": true,
+      "in_stock": true,
+      "created_at": "2026-01-08T13:15:00Z",
+      "updated_at": "2026-01-19T12:00:00Z"
+    },
+    {
+      "id": "prod-010",
+      "name": "Backpack - Laptop Compatible",
+      "description": "Stylish and functional backpack with padded laptop compartment (fits up to 15.6\"), multiple pockets, and water-resistant material.",
+      "price": 54.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/backpack-1.jpg"
+      ],
+      "category": "Accessories",
+      "tags": ["backpack", "laptop", "bag", "travel"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-07T10:30:00Z",
+      "updated_at": "2026-01-18T14:45:00Z"
+    },
+    {
+      "id": "prod-011",
+      "name": "Coffee Maker with Timer",
+      "description": "Programmable coffee maker with 12-cup capacity, auto-brew timer, and keep-warm function. Perfect for your morning routine.",
+      "price": 69.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/coffee-maker-1.jpg"
+      ],
+      "category": "Home & Kitchen",
+      "tags": ["coffee", "kitchen appliance", "programmable"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-06T08:00:00Z",
+      "updated_at": "2026-01-20T09:30:00Z"
+    },
+    {
+      "id": "prod-012",
+      "name": "Resistance Bands Set",
+      "description": "Complete set of 5 resistance bands with different resistance levels, door anchor, handles, and carrying bag. Perfect for home workouts.",
+      "price": 27.99,
+      "currency": "USD",
+      "images": [
+        "./assets/products/resistance-bands-1.jpg"
+      ],
+      "category": "Sports & Fitness",
+      "tags": ["fitness", "resistance bands", "workout", "home gym"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-05T11:00:00Z",
+      "updated_at": "2026-01-17T16:00:00Z"
+    }
+  ]
+}

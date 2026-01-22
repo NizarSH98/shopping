@@ -1,0 +1,58 @@
+# Decap CMS Configuration
+# https://decapcms.org/docs/configuration-options/
+
+# Backend Configuration
+backend:
+  name: github
+  repo: NizarSH98/shopping  # Your GitHub repo
+  branch: main
+  base_url: https://oauth-proxy.YOUR-SUBDOMAIN.workers.dev  # Replace with your Cloudflare Worker URL
+
+# Media Files Configuration
+media_folder: "assets/products"  # Where uploaded images will be stored
+public_folder: "./assets/products"  # Public path to media files
+
+# Publish Mode
+publish_mode: editorial_workflow  # Enables draft/review workflow
+
+# Collections Configuration
+collections:
+  # Products Collection
+  - name: "products"
+    label: "Products"
+    label_singular: "Product"
+    folder: "data"
+    identifier_field: name
+    extension: json
+    format: json
+    create: true
+    delete: true
+    slug: "products"
+    editor:
+      preview: false
+    fields:
+      - label: "Products"
+        name: "products"
+        widget: "list"
+        summary: "{{fields.name}} - {{fields.price}} {{fields.currency}}"
+        fields:
+          - { label: "Product ID", name: "id", widget: "string", hint: "Unique identifier (e.g., prod-001)" }
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - { label: "Price", name: "price", widget: "number", value_type: "float", min: 0, step: 0.01 }
+          - { label: "Currency", name: "currency", widget: "select", options: ["USD", "EUR", "GBP", "CAD", "AUD"], default: "USD" }
+          - label: "Images"
+            name: "images"
+            widget: "list"
+            summary: "{{fields.image}}"
+            field: { label: "Image", name: "image", widget: "image" }
+          - { label: "Category", name: "category", widget: "select", options: ["Electronics", "Clothing", "Home & Kitchen", "Sports & Fitness", "Accessories", "Other"] }
+          - label: "Tags"
+            name: "tags"
+            widget: "list"
+            summary: "{{fields.tag}}"
+            field: { label: "Tag", name: "tag", widget: "string" }
+          - { label: "Featured", name: "featured", widget: "boolean", default: false, hint: "Show as featured product" }
+          - { label: "In Stock", name: "in_stock", widget: "boolean", default: true }
+          - { label: "Created At", name: "created_at", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", picker_utc: true }
+          - { label: "Updated At", name: "updated_at", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", picker_utc: true, default: "" }

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quality products at great prices. Shop our collection of electronics, clothing, home goods, and more.">
+    <title>My Shop - Quality Products at Great Prices</title>
+    
+    <!-- Pico CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <nav class="container">
+            <ul>
+                <li><strong><i class="fas fa-shopping-bag"></i> My Shop</strong></li>
+            </ul>
+            <ul>
+                <li>
+                    <button class="cart-button" id="cartButton" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Welcome to My Shop</h1>
+            <p>Quality Products at Great Prices</p>
+        </section>
+
+        <!-- Search and Filters -->
+        <section class="controls-section">
+            <div class="search-box">
+                <input 
+                    type="search" 
+                    id="searchInput" 
+                    placeholder="Search products..."
+                    aria-label="Search products"
+                >
+            </div>
+
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label for="categoryFilter">
+                        <i class="fas fa-filter"></i> Category
+                    </label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="sortSelect">
+                        <i class="fas fa-sort"></i> Sort By
+                    </label>
+                    <select id="sortSelect">
+                        <option value="featured">Featured</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        <input type="checkbox" id="inStockFilter">
+                        In Stock Only
+                    </label>
+                </div>
+
+                <div class="filter-group price-range">
+                    <label for="priceRange">
+                        <i class="fas fa-dollar-sign"></i> Max Price: <span id="priceValue">$200</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="priceRange" 
+                        min="0" 
+                        max="200" 
+                        value="200"
+                        step="5"
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Info -->
+        <section class="results-info">
+            <p id="resultsCount">Loading products...</p>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="products-grid" id="productsGrid">
+            <!-- Products will be rendered here -->
+        </section>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <i class="fas fa-spinner fa-spin"></i> Loading products...
+        </div>
+
+        <!-- No Results State -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>No products found</h3>
+            <p>Try adjusting your search or filters</p>
+        </div>
+    </main>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <div class="cart-modal-header">
+                <h2><i class="fas fa-shopping-cart"></i> Shopping Cart</h2>
+                <button class="close-button" id="closeCart" aria-label="Close cart">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="cart-modal-body" id="cartItems">
+                <!-- Cart items will be rendered here -->
+            </div>
+
+            <div class="cart-modal-footer">
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <strong>Total:</strong>
+                        <strong id="cartTotal">$0.00</strong>
+                    </div>
+                    <p class="cart-item-count" id="cartItemCount">0 items</p>
+                </div>
+
+                <div class="checkout-form" id="checkoutForm">
+                    <input 
+                        type="text" 
+                        id="customerName" 
+                        placeholder="Your Name (optional)"
+                        aria-label="Customer name"
+                    >
+                    <textarea 
+                        id="orderNotes" 
+                        placeholder="Order notes (optional)"
+                        rows="3"
+                        aria-label="Order notes"
+                    ></textarea>
+                    <button 
+                        class="whatsapp-button" 
+                        id="sendWhatsAppButton"
+                        disabled
+                    >
+                        <i class="fab fa-whatsapp"></i> Send Order to WhatsApp
+                    </button>
+                </div>
+
+                <div class="empty-cart-message" id="emptyCartMessage">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 My Shop. All rights reserved.</p>
+            <p>
+                <a href="./admin/" target="_blank" rel="noopener">
+                    <i class="fas fa-lock"></i> Admin Login
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
+    <!-- App Scripts (ES Modules) -->
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>
