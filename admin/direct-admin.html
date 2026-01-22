@@ -111,6 +111,35 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
+        .product-card input,
+        .product-card textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font-size: inherit;
+            font-family: inherit;
+            background: transparent;
+            transition: all 0.2s;
+        }
+
+        .product-card input:hover,
+        .product-card textarea:hover {
+            background: var(--bg);
+        }
+
+        .product-card input:focus,
+        .product-card textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .product-card textarea {
+            resize: none;
+            min-height: 60px;
+        }
+
         .product-header {
             display: flex;
             justify-content: space-between;
@@ -477,52 +506,66 @@
             grid.innerHTML = products.map((p, i) => `
                 <div class="product-card">
                     <div class="product-header">
-                        <div class="product-title">
-                            <h3>${p.name}</h3>
-                            <div class="product-id">${p.id}</div>
+                        <div class="product-title" style="flex: 1;">
+                            <input type="text" value="${p.name}" onchange="updateField(${i}, 'name', this.value)" style="font-size: 1.125rem; font-weight: 600; color: var(--primary); margin-bottom: 0.25rem;">
+                            <input type="text" value="${p.id}" onchange="updateField(${i}, 'id', this.value)" style="font-size: 0.875rem; color: var(--text-light);">
                         </div>
                         <div class="product-actions">
-                            <button class="icon-btn edit" onclick="editProduct(${i})">
-                                <i class="fas fa-edit"></i>
-                            </button>
                             <button class="icon-btn delete" onclick="deleteProduct(${i})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="product-description">${p.description}</div>
-                    <div class="product-meta">
-                        <span class="badge ${p.in_stock ? 'badge-success' : 'badge-danger'}">
-                            <i class="fas fa-${p.in_stock ? 'check' : 'times'}"></i>
-                            ${p.in_stock ? 'In Stock' : 'Out of Stock'}
-                        </span>
-                        ${p.featured ? '<span class="badge badge-featured"><i class="fas fa-star"></i> Featured</span>' : ''}
+                    <textarea onchange="updateField(${i}, 'description', this.value)" style="color: var(--text-light); font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem;">${p.description}</textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 0.25rem;">Category</label>
+                            <input type="text" value="${p.category}" onchange="updateField(${i}, 'category', this.value)" style="font-size: 0.875rem;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 0.25rem;">Image URL</label>
+                            <input type="url" value="${p.image}" onchange="updateField(${i}, 'image', this.value)" style="font-size: 0.875rem;">
+                        </div>
                     </div>
-                    <div class="product-price">${p.currency} ${p.price.toFixed(2)}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 0.25rem;">Price</label>
+                            <input type="number" step="0.01" value="${p.price}" onchange="updateField(${i}, 'price', parseFloat(this.value))" style="font-size: 1.25rem; font-weight: 700; color: var(--success);">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 0.25rem;">Currency</label>
+                            <input type="text" value="${p.currency}" onchange="updateField(${i}, 'currency', this.value)" style="font-size: 0.875rem;">
+                        </div>
+                    </div>
+                    <div class="product-meta">
+                        <label class="checkbox-group">
+                            <input type="checkbox" ${p.in_stock ? 'checked' : ''} onchange="updateField(${i}, 'in_stock', this.checked)">
+                            <span class="badge ${p.in_stock ? 'badge-success' : 'badge-danger'}">
+                                <i class="fas fa-${p.in_stock ? 'check' : 'times'}"></i>
+                                In Stock
+                            </span>
+                        </label>
+                        <label class="checkbox-group">
+                            <input type="checkbox" ${p.featured ? 'checked' : ''} onchange="updateField(${i}, 'featured', this.checked)">
+                            <span class="badge badge-featured">
+                                <i class="fas fa-star"></i>
+                                Featured
+                            </span>
+                        </label>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function updateField(index, field, value) {
+            products[index][field] = value;
+            saveToGitHub();
         }
 
         function openAddModal() {
             editIndex = -1;
             document.getElementById('modalTitle').textContent = 'Add Product';
             document.getElementById('productForm').reset();
-            document.getElementById('modal').classList.add('show');
-        }
-
-        function editProduct(index) {
-            editIndex = index;
-            const p = products[index];
-            document.getElementById('modalTitle').textContent = 'Edit Product';
-            document.getElementById('name').value = p.name;
-            document.getElementById('id').value = p.id;
-            document.getElementById('category').value = p.category;
-            document.getElementById('description').value = p.description;
-            document.getElementById('price').value = p.price;
-            document.getElementById('currency').value = p.currency;
-            document.getElementById('image').value = p.image;
-            document.getElementById('in_stock').checked = p.in_stock;
-            document.getElementById('featured').checked = p.featured || false;
             document.getElementById('modal').classList.add('show');
         }
 
@@ -545,12 +588,7 @@
                 featured: document.getElementById('featured').checked
             };
 
-            if (editIndex >= 0) {
-                products[editIndex] = product;
-            } else {
-                products.push(product);
-            }
-
+            products.push(product);
             renderProducts();
             closeModal();
             saveToGitHub();
