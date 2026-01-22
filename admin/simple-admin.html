@@ -423,40 +423,50 @@
 
         async function loadProducts() {
             try {
+                console.log('Fetching products from:', `${WORKER_URL}/admin/products`);
                 const response = await fetch(`${WORKER_URL}/admin/products`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
                 
+                console.log('Response status:', response.status);
                 const data = await response.json();
+                console.log('Response data:', data);
                 
                 if (data.success) {
                     let products = data.products;
+                    console.log('Products received:', products);
                     if (!Array.isArray(products) && products.products) {
                         products = products.products;
                     }
                     allProducts = products || [];
+                    console.log('All products array:', allProducts);
                     
                     // If no products, automatically import from JSON
                     if (allProducts.length === 0) {
+                        console.log('No products found, auto-importing...');
                         await autoImportFromJSON();
                     } else {
                         displayProducts(allProducts);
                     }
                 } else {
-                    showMessage('error', '❌ Failed to load products');
+                    showMessage('error', '❌ Failed to load products: ' + (data.error || 'Unknown error'));
                     document.getElementById('productsContainer').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load products</p></div>';
                 }
             } catch (error) {
+                console.error('Load products error:', error);
                 showMessage('error', '❌ Error: ' + error.message);
             }
         }
 
         async function autoImportFromJSON() {
             try {
+                console.log('Auto-importing from ../data/products.json');
                 const response = await fetch('../data/products.json');
                 const data = await response.json();
+                console.log('JSON data loaded:', data);
                 
                 allProducts = data.products || [];
+                console.log('Products to import:', allProducts.length);
                 
                 if (allProducts.length > 0) {
                     await saveToServer();
