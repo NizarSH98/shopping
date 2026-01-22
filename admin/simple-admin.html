@@ -256,9 +256,14 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
                 </div>
-                <button class="btn-success" onclick="openAddModal()">
-                    <i class="fas fa-plus"></i> Add Product
-                </button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-primary" onclick="importFromJSON()">
+                        <i class="fas fa-file-import"></i> Import JSON
+                    </button>
+                    <button class="btn-success" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
             </div>
 
             <div id="productsContainer">
@@ -500,6 +505,25 @@
                 (p.category || '').toLowerCase().includes(search)
             );
             displayProducts(filtered);
+        }
+
+        async function importFromJSON() {
+            if (!confirm('This will import products from data/products.json. Any existing products will be replaced. Continue?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('../data/products.json');
+                const data = await response.json();
+                
+                allProducts = data.products || [];
+                
+                await saveToServer();
+                
+                showMessage('success', `✅ Imported ${allProducts.length} products successfully!`);
+            } catch (error) {
+                showMessage('error', '❌ Failed to import: ' + error.message);
+            }
         }
 
         function openAddModal() {
