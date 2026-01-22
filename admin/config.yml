@@ -4,9 +4,9 @@
 # Backend Configuration
 backend:
   name: github
-  repo: NizarSH98/shopping  # Your GitHub repo
+  repo: NizarSH98/shopping
   branch: main
-  base_url: https://oauth-proxy.YOUR-SUBDOMAIN.workers.dev  # Replace with your Cloudflare Worker URL
+  base_url: https://oauth-proxy.jabernizar98.workers.dev
 
 # Media Files Configuration
 media_folder: "assets/products"  # Where uploaded images will be stored
