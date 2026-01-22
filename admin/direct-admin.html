@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1E40AF;
+            --success: #22C55E;
+            --amber: #F59E0B;
+            --danger: #EF4444;
+            --bg: #F9FAFB;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1E3A8A;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16A34A;
+        }
+
+        .btn-link {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-link:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .product-title h3 {
+            color: var(--primary);
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-id {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-btn.edit:hover {
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--primary);
+        }
+
+        .icon-btn.delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .product-description {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-featured {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--amber);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            animation: slideIn 0.3s;
+        }
+
+        .message.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .message.error {
+            background: var(--danger);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1><i class="fas fa-boxes"></i> Product Manager</h1>
+                <p style="color: var(--text-light); margin-top: 0.5rem;">Simple & Reliable - No backend needed</p>
+            </div>
+            <div class="actions">
+                <button class="btn btn-link" onclick="window.open('../index.html', '_blank')">
+                    <i class="fas fa-store"></i> View Shop
+                </button>
+                <button class="btn btn-success" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
+                <button class="btn btn-primary" onclick="saveProducts()">
+                    <i class="fas fa-download"></i> Download JSON
+                </button>
+            </div>
+        </div>
+
+        <div id="productsGrid" class="products-grid"></div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Product</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label>Product Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Product ID *</label>
+                    <input type="text" id="id" required>
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <input type="text" id="category" required>
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Price *</label>
+                    <input type="number" id="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Currency *</label>
+                    <input type="text" id="currency" value="USD" required>
+                </div>
+                <div class="form-group">
+                    <label>Image URL *</label>
+                    <input type="url" id="image" required>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="in_stock" checked>
+                        <label for="in_stock" style="margin: 0;">In Stock</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="featured">
+                        <label for="featured" style="margin: 0;">Featured Product</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-check"></i> Save Product
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+        let editIndex = -1;
+
+        // Load products from JSON file
+        async function loadProducts() {
+            try {
+                const response = await fetch('../data/products.json');
+                const data = await response.json();
+                products = data.products || [];
+                renderProducts();
+                showMessage('success', `Loaded ${products.length} products`);
+            } catch (error) {
+                showMessage('error', 'Failed to load products: ' + error.message);
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No products yet</h3>
+                        <p>Click "Add Product" to create your first product</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = products.map((p, i) => `
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-title">
+                            <h3>${p.name}</h3>
+                            <div class="product-id">${p.id}</div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="icon-btn edit" onclick="editProduct(${i})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-btn delete" onclick="deleteProduct(${i})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-description">${p.description}</div>
+                    <div class="product-meta">
+                        <span class="badge ${p.in_stock ? 'badge-success' : 'badge-danger'}">
+                            <i class="fas fa-${p.in_stock ? 'check' : 'times'}"></i>
+                            ${p.in_stock ? 'In Stock' : 'Out of Stock'}
+                        </span>
+                        ${p.featured ? '<span class="badge badge-featured"><i class="fas fa-star"></i> Featured</span>' : ''}
+                    </div>
+                    <div class="product-price">${p.currency} ${p.price.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        function openAddModal() {
+            editIndex = -1;
+            document.getElementById('modalTitle').textContent = 'Add Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function editProduct(index) {
+            editIndex = index;
+            const p = products[index];
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            document.getElementById('name').value = p.name;
+            document.getElementById('id').value = p.id;
+            document.getElementById('category').value = p.category;
+            document.getElementById('description').value = p.description;
+            document.getElementById('price').value = p.price;
+            document.getElementById('currency').value = p.currency;
+            document.getElementById('image').value = p.image;
+            document.getElementById('in_stock').checked = p.in_stock;
+            document.getElementById('featured').checked = p.featured || false;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            
+            const product = {
+                id: document.getElementById('id').value,
+                name: document.getElementById('name').value,
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value,
+                price: parseFloat(document.getElementById('price').value),
+                currency: document.getElementById('currency').value,
+                image: document.getElementById('image').value,
+                in_stock: document.getElementById('in_stock').checked,
+                featured: document.getElementById('featured').checked
+            };
+
+            if (editIndex >= 0) {
+                products[editIndex] = product;
+                showMessage('success', 'Product updated!');
+            } else {
+                products.push(product);
+                showMessage('success', 'Product added!');
+            }
+
+            renderProducts();
+            closeModal();
+        }
+
+        function deleteProduct(index) {
+            if (!confirm('Delete this product?')) return;
+            products.splice(index, 1);
+            renderProducts();
+            showMessage('success', 'Product deleted!');
+        }
+
+        function saveProducts() {
+            const dataStr = JSON.stringify({ products }, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'products.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showMessage('success', '✅ Downloaded! Replace data/products.json in your repo and push to GitHub.');
+        }
+
+        function showMessage(type, text) {
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 5000);
+        }
+
+        // Load on start
+        loadProducts();
+    </script>
+</body>
+</html>
