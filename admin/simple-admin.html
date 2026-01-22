@@ -4,118 +4,344 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Product Manager</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         :root {
-            --primary: #1E40AF;
+            --primary-color: #1E40AF;
             --primary-hover: #1e3a8a;
+            --accent-color: #22C55E;
+            --accent-hover: #16a34a;
+            --secondary-accent: #F59E0B;
+            --bg-primary: #F9FAFB;
+            --bg-surface: #FFFFFF;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --border-color: #E5E7EB;
+            --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
         }
         
         body {
-            padding: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
         
         .login-container {
-            max-width: 400px;
-            margin: 10rem auto;
+            max-width: 420px;
+            margin: 8rem auto;
+            padding: 0 1rem;
+        }
+        
+        .login-card {
+            background: var(--bg-surface);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .login-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+        }
+        
+        .login-card p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
         }
         
         .admin-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            background: var(--bg-surface);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .admin-header h1 {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card {
+            background: var(--bg-surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
         }
         
         .product-item {
-            border: 1px solid #e5e7eb;
-            padding: 1rem;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
             margin-bottom: 1rem;
             border-radius: 8px;
-            background: white;
+            background: var(--bg-primary);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .product-item h3 {
-            margin: 0 0 0.5rem 0;
-            color: var(--primary);
+        .product-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
-        .product-actions {
+        .product-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+        
+        .product-meta {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
         
-        .hidden {
-            display: none;
+        .product-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
         
         textarea {
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             min-height: 400px;
+            resize: vertical;
         }
         
-        .success {
-            background: #10b981;
-            color: white;
-            padding: 1rem;
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .error {
-            background: #ef4444;
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
             color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
         }
         
-        .logout-btn {
-            float: right;
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-success {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background: var(--text-secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #475569;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .message-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #86efac;
+        }
+        
+        .message-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
-        <article>
-            <header>
-                <h2>🔐 Admin Login</h2>
-            </header>
+        <div class="login-card">
+            <h2>🔐 Admin Login</h2>
+            <p>Enter your password to manage products</p>
             <form id="loginForm">
-                <label>
-                    Password
-                    <input type="password" id="password" placeholder="Enter admin password" required>
-                </label>
-                <button type="submit">Login</button>
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter admin password" required autocomplete="current-password">
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
             </form>
-            <div id="loginError" class="error hidden"></div>
-        </article>
+            <div id="loginError" class="message message-error hidden" style="margin-top: 1rem;"></div>
+        </div>
     </div>
 
     <!-- Admin Screen -->
     <div id="adminScreen" class="admin-container hidden">
-        <header>
+        <div class="admin-header">
             <h1>📦 Product Manager</h1>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </header>
+            <button class="btn-secondary" onclick="logout()">Logout</button>
+        </div>
         
         <div id="message"></div>
         
-        <article>
-            <header>
-                <h3>Edit Products (JSON)</h3>
-            </header>
-            <p>Edit the products JSON directly below. Be careful with the syntax!</p>
-            <textarea id="productsJson"></textarea>
-            <button onclick="saveProducts()" style="margin-top: 1rem;">💾 Save Products</button>
-        </article>
+        <div class="card">
+            <h3>Edit Products (JSON)</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                Edit the products JSON directly. Make sure to maintain valid JSON syntax.
+            </p>
+            <textarea id="productsJson" placeholder="Loading products..."></textarea>
+            <button onclick="saveProducts()" class="btn-success" style="margin-top: 1rem;">
+                💾 Save Products
+            </button>
+        </div>
         
-        <article style="margin-top: 2rem;">
-            <header>
-                <h3>📋 Product List</h3>
-            </header>
-            <div id="productList"></div>
-        </article>
+        <div class="card">
+            <h3>📋 Current Products</h3>
+            <div id="productList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading products...</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -131,6 +357,9 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = document.getElementById('password').value;
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
             
             try {
                 const response = await fetch(`${WORKER_URL}/admin/login`, {
@@ -146,10 +375,13 @@
                     localStorage.setItem('adminToken', authToken);
                     showAdminScreen();
                 } else {
-                    showError('loginError', 'Invalid password');
+                    showError('loginError', '❌ Invalid password. Please try again.');
                 }
             } catch (error) {
-                showError('loginError', 'Login failed: ' + error.message);
+                showError('loginError', '❌ Login failed: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Login';
             }
         });
 
@@ -184,33 +416,69 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    const productsJson = JSON.stringify(data.products, null, 2);
+                    // Handle both {products: []} and direct array formats
+                    let products = data.products;
+                    if (!Array.isArray(products) && products.products) {
+                        products = products.products;
+                    }
+                    
+                    const productsJson = JSON.stringify({ products: products || [] }, null, 2);
                     document.getElementById('productsJson').value = productsJson;
-                    displayProducts(data.products);
+                    displayProducts(products || []);
                 } else {
-                    showMessage('error', 'Failed to load products');
+                    showMessage('error', '❌ Failed to load products: ' + (data.error || 'Unknown error'));
+                    document.getElementById('productList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Failed to load products</p></div>';
                 }
             } catch (error) {
-                showMessage('error', 'Error loading products: ' + error.message);
+                showMessage('error', '❌ Error loading products: ' + error.message);
+                document.getElementById('productList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error loading products</p></div>';
             }
         }
 
         function displayProducts(products) {
             const container = document.getElementById('productList');
-            container.innerHTML = products.products.map(p => `
+            
+            if (!products || products.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No products yet. Add some products in the JSON editor above.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = products.map(p => `
                 <div class="product-item">
-                    <h3>${p.name}</h3>
-                    <p><strong>ID:</strong> ${p.id} | <strong>Price:</strong> $${p.price} | <strong>Category:</strong> ${p.category}</p>
-                    <p>${p.description}</p>
-                    <p><strong>Stock:</strong> ${p.in_stock ? '✅ In Stock' : '❌ Out of Stock'} | <strong>Featured:</strong> ${p.featured ? '⭐ Yes' : 'No'}</p>
+                    <h4>${p.name || 'Unnamed Product'}</h4>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">${p.description || 'No description'}</p>
+                    <div class="product-meta">
+                        <span><strong>ID:</strong> ${p.id || 'N/A'}</span>
+                        <span><strong>Price:</strong> $${p.price || '0.00'} ${p.currency || 'USD'}</span>
+                        <span><strong>Category:</strong> ${p.category || 'Uncategorized'}</span>
+                        <span class="badge ${p.in_stock ? 'badge-success' : 'badge-danger'}">
+                            ${p.in_stock ? '✅ In Stock' : '❌ Out of Stock'}
+                        </span>
+                        ${p.featured ? '<span class="badge badge-warning">⭐ Featured</span>' : ''}
+                    </div>
                 </div>
             `).join('');
         }
 
         async function saveProducts() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Saving...';
+            
             try {
                 const jsonText = document.getElementById('productsJson').value;
-                const products = JSON.parse(jsonText);
+                const data = JSON.parse(jsonText);
+                
+                // Ensure proper format
+                const products = data.products || data;
+                if (!Array.isArray(products)) {
+                    throw new Error('Products must be an array');
+                }
                 
                 const response = await fetch(`${WORKER_URL}/admin/products`, {
                     method: 'POST',
@@ -218,19 +486,22 @@
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ products })
+                    body: JSON.stringify({ products: { products } })
                 });
                 
-                const data = await response.json();
+                const result = await response.json();
                 
-                if (data.success) {
-                    showMessage('success', '✅ Products saved successfully! Changes will appear on the site in 1-2 minutes.');
+                if (result.success) {
+                    showMessage('success', '✅ Products saved successfully! Changes are live immediately.');
                     displayProducts(products);
                 } else {
-                    showMessage('error', 'Failed to save: ' + data.error);
+                    showMessage('error', '❌ Failed to save: ' + (result.error || 'Unknown error'));
                 }
             } catch (error) {
-                showMessage('error', 'Error saving products: ' + error.message);
+                showMessage('error', '❌ Error: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '💾 Save Products';
             }
         }
 
@@ -251,7 +522,7 @@
 
         function showMessage(type, message) {
             const msgDiv = document.getElementById('message');
-            msgDiv.className = type;
+            msgDiv.className = `message message-${type}`;
             msgDiv.textContent = message;
             setTimeout(() => msgDiv.textContent = '', 5000);
         }
