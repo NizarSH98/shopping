@@ -604,6 +604,7 @@
 
         async function saveToServer() {
             try {
+                console.log('Saving products:', allProducts);
                 const response = await fetch(`${WORKER_URL}/admin/products`, {
                     method: 'POST',
                     headers: {
@@ -613,15 +614,18 @@
                     body: JSON.stringify({ products: allProducts })
                 });
                 
+                console.log('Save response status:', response.status);
                 const data = await response.json();
+                console.log('Save response data:', data);
                 
                 if (data.success) {
                     showMessage('success', '✅ Products saved successfully!');
                     displayProducts(allProducts);
                 } else {
-                    showMessage('error', '❌ Failed to save: ' + data.error);
+                    showMessage('error', '❌ Failed to save: ' + (data.error || 'Unknown error'));
                 }
             } catch (error) {
+                console.error('Save error:', error);
                 showMessage('error', '❌ Error: ' + error.message);
             }
         }
