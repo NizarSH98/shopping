@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Product Manager</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+        :root {
+            --primary: #1E40AF;
+            --primary-hover: #1e3a8a;
+        }
+        
+        body {
+            padding: 2rem;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 10rem auto;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .product-item {
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .product-item h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--primary);
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        textarea {
+            font-family: monospace;
+            min-height: 400px;
+        }
+        
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .logout-btn {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <article>
+            <header>
+                <h2>🔐 Admin Login</h2>
+            </header>
+            <form id="loginForm">
+                <label>
+                    Password
+                    <input type="password" id="password" placeholder="Enter admin password" required>
+                </label>
+                <button type="submit">Login</button>
+            </form>
+            <div id="loginError" class="error hidden"></div>
+        </article>
+    </div>
+
+    <!-- Admin Screen -->
+    <div id="adminScreen" class="admin-container hidden">
+        <header>
+            <h1>📦 Product Manager</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </header>
+        
+        <div id="message"></div>
+        
+        <article>
+            <header>
+                <h3>Edit Products (JSON)</h3>
+            </header>
+            <p>Edit the products JSON directly below. Be careful with the syntax!</p>
+            <textarea id="productsJson"></textarea>
+            <button onclick="saveProducts()" style="margin-top: 1rem;">💾 Save Products</button>
+        </article>
+        
+        <article style="margin-top: 2rem;">
+            <header>
+                <h3>📋 Product List</h3>
+            </header>
+            <div id="productList"></div>
+        </article>
+    </div>
+
+    <script>
+        const WORKER_URL = 'https://oauth-proxy.jabernizar98.workers.dev';
+        let authToken = localStorage.getItem('adminToken');
+
+        // Check if already logged in
+        if (authToken) {
+            checkAuth();
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    authToken = data.token;
+                    localStorage.setItem('adminToken', authToken);
+                    showAdminScreen();
+                } else {
+                    showError('loginError', 'Invalid password');
+                }
+            } catch (error) {
+                showError('loginError', 'Login failed: ' + error.message);
+            }
+        });
+
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${WORKER_URL}/admin/check`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                if (response.ok) {
+                    showAdminScreen();
+                } else {
+                    logout();
+                }
+            } catch (error) {
+                logout();
+            }
+        }
+
+        function showAdminScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('adminScreen').classList.remove('hidden');
+            loadProducts();
+        }
+
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${WORKER_URL}/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const productsJson = JSON.stringify(data.products, null, 2);
+                    document.getElementById('productsJson').value = productsJson;
+                    displayProducts(data.products);
+                } else {
+                    showMessage('error', 'Failed to load products');
+                }
+            } catch (error) {
+                showMessage('error', 'Error loading products: ' + error.message);
+            }
+        }
+
+        function displayProducts(products) {
+            const container = document.getElementById('productList');
+            container.innerHTML = products.products.map(p => `
+                <div class="product-item">
+                    <h3>${p.name}</h3>
+                    <p><strong>ID:</strong> ${p.id} | <strong>Price:</strong> $${p.price} | <strong>Category:</strong> ${p.category}</p>
+                    <p>${p.description}</p>
+                    <p><strong>Stock:</strong> ${p.in_stock ? '✅ In Stock' : '❌ Out of Stock'} | <strong>Featured:</strong> ${p.featured ? '⭐ Yes' : 'No'}</p>
+                </div>
+            `).join('');
+        }
+
+        async function saveProducts() {
+            try {
+                const jsonText = document.getElementById('productsJson').value;
+                const products = JSON.parse(jsonText);
+                
+                const response = await fetch(`${WORKER_URL}/admin/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ products })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('success', '✅ Products saved successfully! Changes will appear on the site in 1-2 minutes.');
+                    displayProducts(products);
+                } else {
+                    showMessage('error', 'Failed to save: ' + data.error);
+                }
+            } catch (error) {
+                showMessage('error', 'Error saving products: ' + error.message);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            document.getElementById('adminScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('password').value = '';
+        }
+
+        function showError(elementId, message) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 5000);
+        }
+
+        function showMessage(type, message) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.className = type;
+            msgDiv.textContent = message;
+            setTimeout(() => msgDiv.textContent = '', 5000);
+        }
+    </script>
+</body>
+</html>
