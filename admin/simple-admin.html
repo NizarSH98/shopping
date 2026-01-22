@@ -4,23 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Product Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --primary-color: #1E40AF;
-            --primary-hover: #1e3a8a;
-            --accent-color: #22C55E;
-            --accent-hover: #16a34a;
-            --secondary-accent: #F59E0B;
-            --bg-primary: #F9FAFB;
-            --bg-surface: #FFFFFF;
-            --text-primary: #0F172A;
-            --text-secondary: #64748B;
+            --primary-color: #1E40AF; --primary-hover: #1e3a8a;
+            --accent-color: #22C55E; --accent-hover: #16a34a;
+            --danger-color: #ef4444; --danger-hover: #dc2626;
+            --bg-primary: #F9FAFB; --bg-surface: #FFFFFF;
+            --text-primary: #0F172A; --text-secondary: #64748B;
             --border-color: #E5E7EB;
             --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.1);
@@ -28,338 +21,353 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary); line-height: 1.6;
         }
         
-        .login-container {
-            max-width: 420px;
-            margin: 8rem auto;
-            padding: 0 1rem;
-        }
-        
+        .login-container { max-width: 420px; margin: 8rem auto; padding: 0 1rem; }
         .login-card {
-            background: var(--bg-surface);
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
+            background: var(--bg-surface); padding: 2.5rem;
+            border-radius: 12px; box-shadow: var(--shadow-lg);
         }
-        
         .login-card h2 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.75rem;
+            color: var(--primary-color); margin-bottom: 0.5rem;
+            font-size: 1.75rem; display: flex; align-items: center; gap: 0.5rem;
         }
         
-        .login-card p {
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 260px; background: var(--bg-surface);
+            border-right: 1px solid var(--border-color); padding: 1.5rem;
+        }
+        .sidebar-brand {
+            display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;
+            color: var(--primary-color); font-size: 1.25rem; font-weight: 700;
+        }
+        .nav-menu { list-style: none; }
+        .nav-item { margin-bottom: 0.5rem; }
+        .nav-link {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+            color: var(--text-secondary); text-decoration: none;
+            border-radius: 8px; transition: all 0.2s; cursor: pointer;
+        }
+        .nav-link:hover { background: var(--bg-primary); color: var(--primary-color); }
+        .nav-link.active {
+            background: rgba(30, 64, 175, 0.1); color: var(--primary-color); font-weight: 600;
+        }
+        
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+        .page-header p { color: var(--text-secondary); }
+        
+        .actions-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+        }
+        .search-box { flex: 1; max-width: 400px; position: relative; }
+        .search-box input {
+            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem;
+        }
+        .search-box i {
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
             color: var(--text-secondary);
-            margin-bottom: 2rem;
         }
         
-        .admin-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
         }
-        
-        .admin-header {
-            background: var(--bg-surface);
-            padding: 1.5rem 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--border-color);
+        .product-card {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 1.5rem; transition: all 0.2s;
         }
+        .product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
         
-        .admin-header h1 {
-            color: var(--primary-color);
-            font-size: 1.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .product-header {
+            display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;
         }
-        
-        .card {
-            background: var(--bg-surface);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
+        .product-title { flex: 1; }
+        .product-title h3 {
+            color: var(--primary-color); font-size: 1.125rem; margin-bottom: 0.25rem;
         }
+        .product-id { font-size: 0.75rem; color: var(--text-secondary); }
         
-        .card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
+        .product-actions { display: flex; gap: 0.5rem; }
+        .icon-btn {
+            width: 32px; height: 32px; border: none; background: none;
+            color: var(--text-secondary); cursor: pointer; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
+        .icon-btn:hover { background: var(--bg-primary); }
+        .icon-btn.edit:hover { color: var(--primary-color); background: rgba(30, 64, 175, 0.1); }
+        .icon-btn.delete:hover { color: var(--danger-color); background: rgba(239, 68, 68, 0.1); }
         
-        .product-item {
-            border: 1px solid var(--border-color);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            background: var(--bg-primary);
-            transition: transform 0.2s, box-shadow 0.2s;
+        .product-description {
+            color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;
+            margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
         }
-        
-        .product-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .product-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+        .meta-item {
+            display: flex; align-items: center; gap: 0.25rem;
+            font-size: 0.875rem; color: var(--text-secondary);
         }
-        
-        .product-item h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.125rem;
-        }
-        
-        .product-meta {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin: 0.75rem 0;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-        
-        .product-meta span {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
+        .product-price {
+            font-size: 1.5rem; font-weight: 700; color: var(--accent-color);
         }
         
         .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            padding: 0.25rem 0.75rem; border-radius: 6px;
+            font-size: 0.75rem; font-weight: 600;
         }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
         
-        .badge-success {
-            background: #d1fae5;
-            color: #065f46;
+        button, .btn {
+            padding: 0.75rem 1.5rem; border: none; border-radius: 8px;
+            font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 0.5rem;
         }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-success { background: var(--accent-color); color: white; }
+        .btn-success:hover { background: var(--accent-hover); }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-secondary { background: var(--text-secondary); color: white; }
         
-        .badge-danger {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        
-        .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
+        input, textarea, select {
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 0.95rem; transition: all 0.2s;
             background: var(--bg-surface);
-            color: var(--text-primary);
         }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
+        input:focus, textarea:focus, select:focus {
+            outline: none; border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
-        
-        textarea {
-            font-family: 'Courier New', monospace;
-            min-height: 400px;
-            resize: vertical;
-        }
-        
         label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 600;
+            display: block; margin-bottom: 0.5rem;
+            color: var(--text-primary); font-weight: 600; font-size: 0.9rem;
         }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         
-        button {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center;
+            justify-content: center; padding: 2rem;
         }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-surface); border-radius: 12px; max-width: 700px;
+            width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg);
         }
-        
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
+        .modal-header {
+            padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        
-        .btn-primary:hover:not(:disabled) {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .modal-header h2 { font-size: 1.5rem; color: var(--primary-color); }
+        .modal-body { padding: 2rem; }
+        .modal-footer {
+            padding: 1.5rem 2rem; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: flex-end; gap: 1rem;
         }
-        
-        .btn-success {
-            background: var(--accent-color);
-            color: white;
+        .close-modal {
+            background: none; border: none; font-size: 1.5rem;
+            color: var(--text-secondary); cursor: pointer; padding: 0;
+            width: 32px; height: 32px; display: flex; align-items: center;
+            justify-content: center; border-radius: 6px;
         }
+        .close-modal:hover { background: var(--bg-primary); }
         
-        .btn-success:hover:not(:disabled) {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .btn-secondary {
-            background: var(--text-secondary);
-            color: white;
-        }
-        
-        .btn-secondary:hover:not(:disabled) {
-            background: #475569;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .hidden {
-            display: none !important;
-        }
-        
+        .hidden { display: none !important; }
         .message {
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 500;
+            padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 0.75rem;
         }
+        .message-success { background: #d1fae5; color: #065f46; border: 1px solid #86efac; }
+        .message-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         
-        .message-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #86efac;
-        }
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); }
+        .empty-state i { font-size: 4rem; margin-bottom: 1rem; opacity: 0.3; }
         
-        .message-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
-        }
+        .checkbox-wrapper { display: flex; align-items: center; gap: 0.5rem; }
+        .checkbox-wrapper input[type="checkbox"] { width: auto; }
         
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-        
-        .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-        
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
         <div class="login-card">
-            <h2>🔐 Admin Login</h2>
-            <p>Enter your password to manage products</p>
+            <h2><i class="fas fa-lock"></i> Admin Login</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Enter password to manage products</p>
             <form id="loginForm">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter admin password" required autocomplete="current-password">
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter admin password" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
             </form>
             <div id="loginError" class="message message-error hidden" style="margin-top: 1rem;"></div>
         </div>
     </div>
 
-    <!-- Admin Screen -->
     <div id="adminScreen" class="admin-container hidden">
-        <div class="admin-header">
-            <h1>📦 Product Manager</h1>
-            <button class="btn-secondary" onclick="logout()">Logout</button>
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Shop Admin</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active">
+                        <i class="fas fa-boxes"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        
-        <div id="message"></div>
-        
-        <div class="card">
-            <h3>Edit Products (JSON)</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                Edit the products JSON directly. Make sure to maintain valid JSON syntax.
-            </p>
-            <textarea id="productsJson" placeholder="Loading products..."></textarea>
-            <button onclick="saveProducts()" class="btn-success" style="margin-top: 1rem;">
-                💾 Save Products
-            </button>
-        </div>
-        
-        <div class="card">
-            <h3>📋 Current Products</h3>
-            <div id="productList">
-                <div class="loading">
-                    <div class="spinner"></div>
+
+        <div class="main-content">
+            <div class="page-header">
+                <h1>Products</h1>
+                <p>Manage your product catalog</p>
+            </div>
+
+            <div id="message"></div>
+
+            <div class="actions-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
+                </div>
+                <button class="btn-success" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
+            </div>
+
+            <div id="productsContainer">
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-spin"></i>
                     <p>Loading products...</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Product</h2>
+                <button class="close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="editIndex">
+                    
+                    <div class="form-group">
+                        <label for="productName">Product Name *</label>
+                        <input type="text" id="productName" required placeholder="Enter product name">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productId">Product ID *</label>
+                            <input type="text" id="productId" required placeholder="prod-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Category *</label>
+                            <select id="productCategory" required>
+                                <option value="">Select category</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Home & Kitchen">Home & Kitchen</option>
+                                <option value="Sports & Fitness">Sports & Fitness</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productDescription">Description *</label>
+                        <textarea id="productDescription" rows="3" required placeholder="Enter product description"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">Price *</label>
+                            <input type="number" id="productPrice" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="productCurrency">Currency</label>
+                            <select id="productCurrency">
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productImages">Image URL</label>
+                        <input type="text" id="productImages" placeholder="https://example.com/image.jpg">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="productInStock" checked>
+                            <label for="productInStock" style="margin: 0;">In Stock</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="productFeatured">
+                            <label for="productFeatured" style="margin: 0;">Featured Product</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn-success" onclick="saveProduct()">
+                    <i class="fas fa-save"></i> Save Product
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const WORKER_URL = 'https://oauth-proxy.jabernizar98.workers.dev';  // Your Cloudflare Worker URL
+        const WORKER_URL = 'https://oauth-proxy.jabernizar98.workers.dev';
         let authToken = localStorage.getItem('adminToken');
+        let allProducts = [];
 
-        // Check if already logged in
-        if (authToken) {
-            checkAuth();
-        }
+        if (authToken) checkAuth();
 
-        // Login form handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = document.getElementById('password').value;
             const btn = e.target.querySelector('button');
             btn.disabled = true;
-            btn.textContent = 'Logging in...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
             
             try {
                 const response = await fetch(`${WORKER_URL}/admin/login`, {
@@ -375,13 +383,13 @@
                     localStorage.setItem('adminToken', authToken);
                     showAdminScreen();
                 } else {
-                    showError('loginError', '❌ Invalid password. Please try again.');
+                    showError('loginError', '❌ Invalid password');
                 }
             } catch (error) {
                 showError('loginError', '❌ Login failed: ' + error.message);
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Login';
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
             }
         });
 
@@ -416,93 +424,169 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Handle both {products: []} and direct array formats
                     let products = data.products;
                     if (!Array.isArray(products) && products.products) {
                         products = products.products;
                     }
-                    
-                    const productsJson = JSON.stringify({ products: products || [] }, null, 2);
-                    document.getElementById('productsJson').value = productsJson;
-                    displayProducts(products || []);
+                    allProducts = products || [];
+                    displayProducts(allProducts);
                 } else {
-                    showMessage('error', '❌ Failed to load products: ' + (data.error || 'Unknown error'));
-                    document.getElementById('productList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Failed to load products</p></div>';
+                    showMessage('error', '❌ Failed to load products');
+                    document.getElementById('productsContainer').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load products</p></div>';
                 }
             } catch (error) {
-                showMessage('error', '❌ Error loading products: ' + error.message);
-                document.getElementById('productList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error loading products</p></div>';
+                showMessage('error', '❌ Error: ' + error.message);
             }
         }
 
         function displayProducts(products) {
-            const container = document.getElementById('productList');
+            const container = document.getElementById('productsContainer');
             
             if (!products || products.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">📭</div>
-                        <p>No products yet. Add some products in the JSON editor above.</p>
+                        <i class="fas fa-box-open"></i>
+                        <h3>No products yet</h3>
+                        <p>Click "Add Product" to create your first product</p>
                     </div>
                 `;
                 return;
             }
             
-            container.innerHTML = products.map(p => `
-                <div class="product-item">
-                    <h4>${p.name || 'Unnamed Product'}</h4>
-                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">${p.description || 'No description'}</p>
-                    <div class="product-meta">
-                        <span><strong>ID:</strong> ${p.id || 'N/A'}</span>
-                        <span><strong>Price:</strong> $${p.price || '0.00'} ${p.currency || 'USD'}</span>
-                        <span><strong>Category:</strong> ${p.category || 'Uncategorized'}</span>
-                        <span class="badge ${p.in_stock ? 'badge-success' : 'badge-danger'}">
-                            ${p.in_stock ? '✅ In Stock' : '❌ Out of Stock'}
-                        </span>
-                        ${p.featured ? '<span class="badge badge-warning">⭐ Featured</span>' : ''}
-                    </div>
+            container.innerHTML = `
+                <div class="products-grid">
+                    ${products.map((p, index) => `
+                        <div class="product-card">
+                            <div class="product-header">
+                                <div class="product-title">
+                                    <h3>${p.name || 'Unnamed'}</h3>
+                                    <div class="product-id">${p.id || 'N/A'}</div>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="icon-btn edit" onclick="editProduct(${index})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete" onclick="deleteProduct(${index})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <p class="product-description">${p.description || 'No description'}</p>
+                                <div class="product-meta">
+                                    <span class="badge ${p.in_stock ? 'badge-success' : 'badge-danger'}">
+                                        <i class="fas fa-${p.in_stock ? 'check' : 'times'}"></i>
+                                        ${p.in_stock ? 'In Stock' : 'Out of Stock'}
+                                    </span>
+                                    ${p.featured ? '<span class="badge badge-warning"><i class="fas fa-star"></i> Featured</span>' : ''}
+                                    <span class="meta-item">
+                                        <i class="fas fa-tag"></i>
+                                        ${p.category || 'Uncategorized'}
+                                    </span>
+                                </div>
+                                <div class="product-price">$${parseFloat(p.price || 0).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `).join('')}
                 </div>
-            `).join('');
+            `;
         }
 
-        async function saveProducts() {
-            const btn = event.target;
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Saving...';
+        function filterProducts() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allProducts.filter(p => 
+                (p.name || '').toLowerCase().includes(search) ||
+                (p.description || '').toLowerCase().includes(search) ||
+                (p.category || '').toLowerCase().includes(search)
+            );
+            displayProducts(filtered);
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('editIndex').value = '';
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function editProduct(index) {
+            const product = allProducts[index];
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            document.getElementById('editIndex').value = index;
+            document.getElementById('productName').value = product.name || '';
+            document.getElementById('productId').value = product.id || '';
+            document.getElementById('productCategory').value = product.category || '';
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productPrice').value = product.price || '';
+            document.getElementById('productCurrency').value = product.currency || 'USD';
+            document.getElementById('productImages').value = (product.images && product.images[0]) || '';
+            document.getElementById('productInStock').checked = product.in_stock !== false;
+            document.getElementById('productFeatured').checked = product.featured === true;
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        async function saveProduct() {
+            const editIndex = document.getElementById('editIndex').value;
+            const imageUrl = document.getElementById('productImages').value;
             
+            const product = {
+                id: document.getElementById('productId').value,
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                currency: document.getElementById('productCurrency').value,
+                category: document.getElementById('productCategory').value,
+                images: imageUrl ? [imageUrl] : [],
+                tags: [document.getElementById('productCategory').value.toLowerCase()],
+                in_stock: document.getElementById('productInStock').checked,
+                featured: document.getElementById('productFeatured').checked,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+
+            if (editIndex === '') {
+                allProducts.push(product);
+            } else {
+                allProducts[editIndex] = product;
+            }
+
+            await saveToServer();
+            closeModal();
+        }
+
+        async function deleteProduct(index) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            
+            allProducts.splice(index, 1);
+            await saveToServer();
+        }
+
+        async function saveToServer() {
             try {
-                const jsonText = document.getElementById('productsJson').value;
-                const data = JSON.parse(jsonText);
-                
-                // Ensure proper format
-                const products = data.products || data;
-                if (!Array.isArray(products)) {
-                    throw new Error('Products must be an array');
-                }
-                
                 const response = await fetch(`${WORKER_URL}/admin/products`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ products: { products } })
+                    body: JSON.stringify({ products: { products: allProducts } })
                 });
                 
-                const result = await response.json();
+                const data = await response.json();
                 
-                if (result.success) {
-                    showMessage('success', '✅ Products saved successfully! Changes are live immediately.');
-                    displayProducts(products);
+                if (data.success) {
+                    showMessage('success', '✅ Products saved successfully!');
+                    displayProducts(allProducts);
                 } else {
-                    showMessage('error', '❌ Failed to save: ' + (result.error || 'Unknown error'));
+                    showMessage('error', '❌ Failed to save: ' + data.error);
                 }
             } catch (error) {
                 showMessage('error', '❌ Error: ' + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '💾 Save Products';
             }
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
         }
 
         function logout() {
@@ -510,7 +594,6 @@
             authToken = null;
             document.getElementById('adminScreen').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('password').value = '';
         }
 
         function showError(elementId, message) {
@@ -523,7 +606,7 @@
         function showMessage(type, message) {
             const msgDiv = document.getElementById('message');
             msgDiv.className = `message message-${type}`;
-            msgDiv.textContent = message;
+            msgDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
             setTimeout(() => msgDiv.textContent = '', 5000);
         }
     </script>

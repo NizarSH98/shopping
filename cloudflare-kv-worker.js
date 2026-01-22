@@ -146,13 +146,28 @@ async function handleRequest(request, env) {
     }
 
     try {
-      let products = await env.PRODUCTS_KV.get('products', { type: 'json' });
+      let products = null;
       
-      // If no products in KV, use default products
+      // Try to get from KV
+      try {
+        if (env.PRODUCTS_KV) {
+          products = await env.PRODUCTS_KV.get('products', { type: 'json' });
+        }
+      } catch (kvError) {
+        console.error('KV Error:', kvError);
+      }
+      
+      // If no products in KV, use default empty structure
       if (!products) {
-        products = DEFAULT_PRODUCTS;
-        // Save default products to KV
-        await env.PRODUCTS_KV.put('products', JSON.stringify(products));
+        products = { products: [] };
+        // Try to save default to KV
+        try {
+          if (env.PRODUCTS_KV) {
+            await env.PRODUCTS_KV.put('products', JSON.stringify(products));
+          }
+        } catch (saveError) {
+          console.error('Failed to save default products:', saveError);
+        }
       }
 
       return new Response(JSON.stringify({ 
@@ -165,9 +180,10 @@ async function handleRequest(request, env) {
         }
       });
     } catch (error) {
+      console.error('Error in /admin/products GET:', error);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: error.message || 'Failed to load products'
       }), {
         status: 500,
         headers: { 
@@ -199,8 +215,16 @@ async function handleRequest(request, env) {
     try {
       const { products } = await request.json();
       
+      if (!products) {
+        throw new Error('No products data provided');
+      }
+      
       // Save to Cloudflare KV
-      await env.PRODUCTS_KV.put('products', JSON.stringify(products));
+      if (env.PRODUCTS_KV) {
+        await env.PRODUCTS_KV.put('products', JSON.stringify(products));
+      } else {
+        throw new Error('KV storage not configured');
+      }
 
       return new Response(JSON.stringify({ 
         success: true,
@@ -212,9 +236,10 @@ async function handleRequest(request, env) {
         }
       });
     } catch (error) {
+      console.error('Error in /admin/products POST:', error);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: error.message || 'Failed to save products'
       }), {
         status: 500,
         headers: { 
