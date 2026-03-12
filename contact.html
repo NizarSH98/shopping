@@ -3,31 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact | My Shop</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <title>Contact Us | GlowHaven</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+
+  <!-- Header -->
   <header class="site-header">
-    <div class="container header-top"><a class="brand" href="./index.html">My Shop</a></div>
+    <div class="container header-top">
+      <a class="brand" href="./index.html" aria-label="GlowHaven home">
+        <i class="fas fa-spa" aria-hidden="true"></i>
+        <span>GlowHaven</span>
+      </a>
+      <nav class="utility-nav" aria-label="Store links">
+        <a href="./index.html">Shop</a>
+        <a href="./brands.html">Brands</a>
+        <a href="./rewards.html">Rewards</a>
+        <a href="./contact.html">Contact</a>
+      </nav>
+      <a href="./search.html" class="icon-button" aria-label="Search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </a>
+    </div>
   </header>
 
+  <!-- Main Content -->
   <main class="container static-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="./index.html">Home</a>
+      <span>/</span>
+      <strong>Contact</strong>
+    </nav>
+
     <section class="static-section-card">
-      <h1>Contact</h1>
-      <p>Questions about your order or products? Reach out anytime.</p>
+      <h1>Get in Touch</h1>
+      <p>Have a question about your order, a product, or just want to say hello? Fill out the form below and we'll get back to you as soon as possible.</p>
+
       <form class="contact-form">
-        <label for="contactName">Name</label>
-        <input id="contactName" type="text" placeholder="Your name">
-        <label for="contactEmail">Email</label>
-        <input id="contactEmail" type="email" placeholder="you@example.com">
+        <label for="contactName">Full Name</label>
+        <input id="contactName" type="text" placeholder="Your name" required>
+
+        <label for="contactEmail">Email Address</label>
+        <input id="contactEmail" type="email" placeholder="you@example.com" required>
+
+        <label for="contactSubject">Subject</label>
+        <input id="contactSubject" type="text" placeholder="How can we help?">
+
         <label for="contactMessage">Message</label>
-        <textarea id="contactMessage" rows="4" placeholder="How can we help?"></textarea>
-        <button type="button">Send message</button>
+        <textarea id="contactMessage" rows="5" placeholder="Tell us more about your inquiry..." required></textarea>
+
+        <button type="button">Send Message</button>
       </form>
     </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-grid"><div><h4>Support</h4><a href="./search.html">Search</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a></div></div></footer>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a class="footer-logo" href="./index.html">
+            <i class="fas fa-spa"></i> GlowHaven
+          </a>
+          <p>Your trusted beauty destination. Authentic products from the world's best brands.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>Shop</h4>
+            <a href="./index.html">All Products</a>
+            <a href="./brands.html">Shop by Brand</a>
+            <a href="./rewards.html">Promotions</a>
+          </div>
+          <div>
+            <h4>Support</h4>
+            <a href="./contact.html">Contact Us</a>
+            <a href="./search.html">Search</a>
+            <a href="./rewards.html">Rewards</a>
+          </div>
+          <div>
+            <h4>Policies</h4>
+            <a href="./privacy.html">Privacy Policy</a>
+            <a href="./refund.html">Refund Policy</a>
+            <a href="./terms.html">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 GlowHaven. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

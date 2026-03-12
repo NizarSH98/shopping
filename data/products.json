@@ -2,340 +2,366 @@
   "products": [
     {
       "id": "prod-001",
-      "name": "Wireless Bluetooth Headphones",
-      "description": "High-quality over-ear headphones with active noise cancellation, 30-hour battery life, and premium sound quality. Perfect for music lovers and professionals.",
-      "price": 79.99,
+      "name": "CeraVe Moisturizing Cream",
+      "description": "Rich, creamy moisturizer with 3 essential ceramides and hyaluronic acid to help restore the skin's natural barrier. Developed with dermatologists, this fragrance-free formula provides 24-hour hydration for dry to very dry skin. MVE Delivery Technology ensures continuous moisture release throughout the day.",
+      "price": 18.99,
       "currency": "USD",
       "images": [
-        "./assets/products/headphones-1.jpg",
-        "./assets/products/headphones-2.jpg"
+        "https://placehold.co/600x600/f5e6e8/1B2A3D?text=CeraVe%0AMoisturizer"
       ],
-      "category": "Electronics",
-      "tags": [
-        "audio",
-        "wireless",
-        "bluetooth",
-        "headphones"
-      ],
+      "category": "Skincare",
+      "tags": ["moisturizer", "ceramides", "hyaluronic acid", "dry skin", "fragrance-free"],
       "featured": true,
       "in_stock": true,
       "created_at": "2026-01-15T10:00:00Z",
-      "updated_at": "2026-01-20T14:30:00Z",
-      "brand": "SoundPeak",
-      "excerpt": "High-quality over-ear headphones with active noise cancellation, 30-hour battery life, and prem...",
-      "stock_quantity": 14,
-      "compare_at_price": 99.99
+      "updated_at": "2026-03-20T14:30:00Z",
+      "brand": "CeraVe",
+      "excerpt": "Rich moisturizer with 3 essential ceramides and hyaluronic acid for 24-hour hydration.",
+      "stock_quantity": 45,
+      "compare_at_price": 24.99
     },
     {
       "id": "prod-002",
-      "name": "Organic Cotton T-Shirt",
-      "description": "Comfortable, breathable organic cotton t-shirt. Available in multiple colors. Eco-friendly and sustainably sourced.",
-      "price": 24.99,
+      "name": "The Ordinary Niacinamide 10% + Zinc 1%",
+      "description": "High-strength vitamin and mineral formula that targets visible blemishes and signs of congestion. Niacinamide (Vitamin B3) reduces the appearance of skin blemishes and congestion while zinc balances visible sebum activity. Water-based, alcohol-free, oil-free, silicone-free, vegan, and gluten-free.",
+      "price": 6.50,
       "currency": "USD",
       "images": [
-        "./assets/products/tshirt-1.jpg"
+        "https://placehold.co/600x600/eef1f5/1B2A3D?text=The+Ordinary%0ANiacinamide"
       ],
-      "category": "Clothing",
-      "tags": [
-        "clothing",
-        "organic",
-        "cotton",
-        "tshirt"
-      ],
-      "featured": false,
+      "category": "Skincare",
+      "tags": ["serum", "niacinamide", "zinc", "blemish", "pores", "oil-control", "vegan"],
+      "featured": true,
       "in_stock": true,
       "created_at": "2026-01-10T09:00:00Z",
-      "updated_at": "2026-01-18T11:20:00Z",
-      "brand": "ThreadForm",
-      "excerpt": "Comfortable, breathable organic cotton t-shirt. Available in multiple colors. Eco-friendly and...",
-      "stock_quantity": 22,
-      "variants": [
-        {
-          "id": "prod-002-v1",
-          "title": "Standard",
-          "price": 24.99,
-          "in_stock": true
-        },
-        {
-          "id": "prod-002-v2",
-          "title": "Premium",
-          "price": 34.99,
-          "in_stock": true
-        }
-      ]
+      "updated_at": "2026-03-18T11:20:00Z",
+      "brand": "The Ordinary",
+      "excerpt": "High-strength vitamin and mineral formula targeting visible blemishes and congestion.",
+      "stock_quantity": 62
     },
     {
       "id": "prod-003",
-      "name": "Stainless Steel Water Bottle",
-      "description": "Insulated stainless steel water bottle keeps drinks cold for 24 hours or hot for 12 hours. BPA-free, leak-proof design. 750ml capacity.",
-      "price": 29.99,
+      "name": "La Roche-Posay Anthelios SPF 50+",
+      "description": "Ultra-light, invisible fluid sunscreen with broad-spectrum SPF 50+ UVA/UVB protection. Formulated with La Roche-Posay thermal spring water and Cell-Ox Shield technology. Non-greasy, non-comedogenic, and suitable for sensitive skin. Water-resistant up to 80 minutes.",
+      "price": 33.50,
       "currency": "USD",
       "images": [
-        "./assets/products/bottle-1.jpg",
-        "./assets/products/bottle-2.jpg"
+        "https://placehold.co/600x600/f5e6e8/1B2A3D?text=La+Roche-Posay%0ASPF+50%2B"
       ],
-      "category": "Home & Kitchen",
-      "tags": [
-        "bottle",
-        "insulated",
-        "stainless steel",
-        "eco-friendly"
-      ],
+      "category": "Skincare",
+      "tags": ["sunscreen", "spf50", "uva", "uvb", "sensitive skin", "non-comedogenic"],
       "featured": true,
       "in_stock": true,
       "created_at": "2026-01-12T08:30:00Z",
-      "updated_at": "2026-01-19T16:45:00Z",
-      "brand": "HydraNest",
-      "excerpt": "Insulated stainless steel water bottle keeps drinks cold for 24 hours or hot for 12 hours. BPA-...",
-      "stock_quantity": 11
+      "updated_at": "2026-03-19T16:45:00Z",
+      "brand": "La Roche-Posay",
+      "excerpt": "Ultra-light invisible fluid sunscreen with broad-spectrum SPF 50+ protection.",
+      "stock_quantity": 28,
+      "compare_at_price": 39.99
     },
     {
       "id": "prod-004",
-      "name": "Yoga Mat with Carrying Strap",
-      "description": "Extra thick (6mm) non-slip yoga mat. Made from high-density foam with excellent cushioning. Includes carrying strap for easy transport.",
-      "price": 34.99,
+      "name": "Bioderma Sensibio Micellar Water",
+      "description": "Gentle no-rinse cleansing micellar water for sensitive skin. Fatty acid esters, the key ingredient of micelles, naturally interact with the skin's own biomechanisms. Removes makeup and impurities without irritation. Dermatologically tested. 500ml.",
+      "price": 14.99,
       "currency": "USD",
       "images": [
-        "./assets/products/yoga-mat-1.jpg"
+        "https://placehold.co/600x600/eef1f5/1B2A3D?text=Bioderma%0AMicellar"
       ],
-      "category": "Sports & Fitness",
-      "tags": [
-        "yoga",
-        "fitness",
-        "exercise",
-        "mat"
-      ],
+      "category": "Skincare",
+      "tags": ["cleanser", "micellar", "sensitive skin", "makeup remover", "gentle"],
       "featured": false,
       "in_stock": true,
       "created_at": "2026-01-14T12:00:00Z",
-      "updated_at": "2026-01-21T09:15:00Z",
-      "brand": "FlowFlex",
-      "excerpt": "Extra thick (6mm) non-slip yoga mat. Made from high-density foam with excellent cushioning. Inc...",
-      "stock_quantity": 4,
-      "compare_at_price": 43.74
+      "updated_at": "2026-03-21T09:15:00Z",
+      "brand": "Bioderma",
+      "excerpt": "Gentle no-rinse micellar water that removes makeup and impurities for sensitive skin.",
+      "stock_quantity": 34
     },
     {
       "id": "prod-005",
-      "name": "Portable Power Bank 20000mAh",
-      "description": "High-capacity portable charger with dual USB ports and USB-C. Fast charging support for smartphones, tablets, and other devices.",
-      "price": 39.99,
+      "name": "Maybelline Instant Age Rewind Concealer",
+      "description": "America's #1 concealer for a reason. Micro-corrector applicator instantly erases dark circles, smooths fine lines, and covers imperfections. Concentrated formula with goji berry and haloxyl. Available in 18 shades. Dermatologist-tested and ophthalmologist-tested.",
+      "price": 11.99,
       "currency": "USD",
       "images": [
-        "./assets/products/powerbank-1.jpg"
+        "https://placehold.co/600x600/f5e6e8/B76E79?text=Maybelline%0AConcealer"
       ],
-      "category": "Electronics",
-      "tags": [
-        "charger",
-        "powerbank",
-        "portable",
-        "usb"
-      ],
+      "category": "Makeup",
+      "tags": ["concealer", "dark circles", "anti-aging", "coverage"],
       "featured": true,
-      "in_stock": false,
+      "in_stock": true,
       "created_at": "2026-01-11T14:20:00Z",
-      "updated_at": "2026-01-22T08:00:00Z",
-      "brand": "VoltEdge",
-      "excerpt": "High-capacity portable charger with dual USB ports and USB-C. Fast charging support for smartph...",
-      "stock_quantity": 0
+      "updated_at": "2026-03-22T08:00:00Z",
+      "brand": "Maybelline",
+      "excerpt": "America's #1 concealer — instantly erases dark circles and covers imperfections.",
+      "stock_quantity": 51,
+      "compare_at_price": 14.99
     },
     {
       "id": "prod-006",
-      "name": "LED Desk Lamp with USB Port",
-      "description": "Modern LED desk lamp with adjustable brightness, color temperature control, and built-in USB charging port. Energy-efficient and eye-friendly.",
-      "price": 45.99,
+      "name": "NYX Soft Matte Lip Cream",
+      "description": "Lightweight lip cream that glides on silky smooth and sets to a stunning matte finish. Infused with natural oils for comfortable long-wear. Plush, creamy texture delivers intense, vivid color without dryness. Available in 36 shades.",
+      "price": 8.49,
       "currency": "USD",
       "images": [
-        "./assets/products/lamp-1.jpg",
-        "./assets/products/lamp-2.jpg"
+        "https://placehold.co/600x600/B76E79/ffffff?text=NYX%0ALip+Cream"
       ],
-      "category": "Home & Kitchen",
-      "tags": [
-        "lamp",
-        "led",
-        "desk",
-        "lighting"
-      ],
+      "category": "Makeup",
+      "tags": ["lipstick", "matte", "lip cream", "long-wear", "pigmented"],
       "featured": false,
       "in_stock": true,
       "created_at": "2026-01-13T10:45:00Z",
-      "updated_at": "2026-01-20T13:30:00Z",
-      "brand": "LumaCore",
-      "excerpt": "Modern LED desk lamp with adjustable brightness, color temperature control, and built-in USB ch...",
-      "stock_quantity": 8
+      "updated_at": "2026-03-20T13:30:00Z",
+      "brand": "NYX",
+      "excerpt": "Lightweight lip cream with silky smooth application and stunning matte finish.",
+      "stock_quantity": 73,
+      "variants": [
+        { "id": "prod-006-v1", "title": "Abu Dhabi", "price": 8.49, "in_stock": true },
+        { "id": "prod-006-v2", "title": "Monte Carlo", "price": 8.49, "in_stock": true },
+        { "id": "prod-006-v3", "title": "Istanbul", "price": 8.49, "in_stock": true }
+      ]
     },
     {
       "id": "prod-007",
-      "name": "Running Shoes - Men's",
-      "description": "Lightweight running shoes with responsive cushioning and breathable mesh upper. Designed for comfort during long runs.",
-      "price": 89.99,
+      "name": "L'Oréal True Match Foundation",
+      "description": "Precise-match, flawless-look foundation with a natural finish. 45 true-to-skin shades ensure a perfect color match. Hydrating formula with hyaluronic acid smooths skin and provides medium-to-full buildable coverage that lasts up to 24 hours. Non-comedogenic, dermatologist-tested.",
+      "price": 12.99,
       "currency": "USD",
       "images": [
-        "./assets/products/shoes-1.jpg"
+        "https://placehold.co/600x600/eef1f5/B76E79?text=L%27Or%C3%A9al%0AFoundation"
       ],
-      "category": "Sports & Fitness",
-      "tags": [
-        "shoes",
-        "running",
-        "athletic",
-        "mens"
-      ],
-      "featured": true,
+      "category": "Makeup",
+      "tags": ["foundation", "coverage", "hyaluronic acid", "natural finish", "long-wear"],
+      "featured": false,
       "in_stock": true,
       "created_at": "2026-01-09T11:30:00Z",
-      "updated_at": "2026-01-17T15:20:00Z",
-      "brand": "StrideWorks",
-      "excerpt": "Lightweight running shoes with responsive cushioning and breathable mesh upper. Designed for co...",
-      "stock_quantity": 3,
-      "compare_at_price": 112.49,
+      "updated_at": "2026-03-17T15:20:00Z",
+      "brand": "L'Oréal",
+      "excerpt": "Precise-match foundation with hyaluronic acid for 24-hour flawless coverage.",
+      "stock_quantity": 39,
       "variants": [
-        {
-          "id": "prod-007-v1",
-          "title": "Standard",
-          "price": 89.99,
-          "in_stock": true
-        },
-        {
-          "id": "prod-007-v2",
-          "title": "Premium",
-          "price": 99.99,
-          "in_stock": true
-        }
+        { "id": "prod-007-v1", "title": "Fair Ivory", "price": 12.99, "in_stock": true },
+        { "id": "prod-007-v2", "title": "Natural Beige", "price": 12.99, "in_stock": true },
+        { "id": "prod-007-v3", "title": "Caramel", "price": 12.99, "in_stock": true }
       ]
     },
     {
       "id": "prod-008",
-      "name": "Bamboo Cutting Board Set",
-      "description": "Set of 3 bamboo cutting boards in different sizes. Durable, eco-friendly, and naturally antimicrobial. Easy to clean and maintain.",
-      "price": 32.99,
+      "name": "MAC Retro Matte Lipstick – Ruby Woo",
+      "description": "The iconic vivid blue-red retro matte lipstick that's become a cult classic worldwide. Long-wearing, intensely pigmented matte formula delivers statement color. One of MAC's all-time best-selling shades. The perfect red for every skin tone.",
+      "price": 23.00,
       "currency": "USD",
       "images": [
-        "./assets/products/cutting-board-1.jpg"
+        "https://placehold.co/600x600/B76E79/ffffff?text=MAC%0ARuby+Woo"
       ],
-      "category": "Home & Kitchen",
-      "tags": [
-        "kitchen",
-        "bamboo",
-        "cutting board",
-        "eco-friendly"
-      ],
-      "featured": false,
+      "category": "Makeup",
+      "tags": ["lipstick", "matte", "red", "iconic", "long-wear", "pigmented"],
+      "featured": true,
       "in_stock": true,
-      "created_at": "2026-01-16T09:00:00Z",
-      "updated_at": "2026-01-21T10:00:00Z",
-      "brand": "KitchenRoot",
-      "excerpt": "Set of 3 bamboo cutting boards in different sizes. Durable, eco-friendly, and naturally antimic...",
-      "stock_quantity": 19
+      "created_at": "2026-01-08T09:00:00Z",
+      "updated_at": "2026-03-15T12:00:00Z",
+      "brand": "MAC",
+      "excerpt": "Iconic vivid blue-red retro matte lipstick — a cult-classic best-seller.",
+      "stock_quantity": 19,
+      "compare_at_price": 25.00
     },
     {
       "id": "prod-009",
-      "name": "Smart Watch Fitness Tracker",
-      "description": "Advanced fitness tracker with heart rate monitoring, sleep tracking, step counter, and smartphone notifications. Water-resistant up to 50m.",
-      "price": 129.99,
+      "name": "Olaplex No.3 Hair Perfector",
+      "description": "At-home weekly treatment that reduces breakage and strengthens hair by repairing disulfide bonds broken by chemical, thermal, and mechanical damage. Patented bond-building technology. Suitable for all hair types. Vegan and cruelty-free.",
+      "price": 30.00,
       "currency": "USD",
       "images": [
-        "./assets/products/smartwatch-1.jpg",
-        "./assets/products/smartwatch-2.jpg"
+        "https://placehold.co/600x600/eef1f5/1B2A3D?text=Olaplex%0ANo.3"
       ],
-      "category": "Electronics",
-      "tags": [
-        "smartwatch",
-        "fitness",
-        "tracker",
-        "wearable"
-      ],
+      "category": "Haircare",
+      "tags": ["hair treatment", "bond repair", "strengthening", "damaged hair", "vegan"],
       "featured": true,
       "in_stock": true,
-      "created_at": "2026-01-08T13:15:00Z",
-      "updated_at": "2026-01-19T12:00:00Z",
-      "brand": "PulseTrack",
-      "excerpt": "Advanced fitness tracker with heart rate monitoring, sleep tracking, step counter, and smartpho...",
-      "stock_quantity": 6,
-      "variants": [
-        {
-          "id": "prod-009-v1",
-          "title": "Standard",
-          "price": 129.99,
-          "in_stock": true
-        },
-        {
-          "id": "prod-009-v2",
-          "title": "Premium",
-          "price": 139.99,
-          "in_stock": true
-        }
-      ]
+      "created_at": "2026-01-07T10:30:00Z",
+      "updated_at": "2026-03-18T14:00:00Z",
+      "brand": "Olaplex",
+      "excerpt": "At-home weekly treatment that repairs bonds broken by chemical and thermal damage.",
+      "stock_quantity": 22,
+      "compare_at_price": 36.00
     },
     {
       "id": "prod-010",
-      "name": "Backpack - Laptop Compatible",
-      "description": "Stylish and functional backpack with padded laptop compartment (fits up to 15.6\"), multiple pockets, and water-resistant material.",
-      "price": 54.99,
+      "name": "Moroccanoil Treatment Original",
+      "description": "The iconic argan oil-infused hair treatment that started it all. Foundation for all hairstyling — conditions, detangles, and speeds up drying time. Rich in antioxidant argan oil, vitamins, and proteins to strengthen and add brilliant shine. Absorbs instantly.",
+      "price": 48.00,
       "currency": "USD",
       "images": [
-        "./assets/products/backpack-1.jpg"
+        "https://placehold.co/600x600/f5e6e8/1B2A3D?text=Moroccanoil%0ATreatment"
       ],
-      "category": "Accessories",
-      "tags": [
-        "backpack",
-        "laptop",
-        "bag",
-        "travel"
-      ],
+      "category": "Haircare",
+      "tags": ["hair oil", "argan oil", "shine", "styling", "detangle"],
       "featured": false,
       "in_stock": true,
-      "created_at": "2026-01-07T10:30:00Z",
-      "updated_at": "2026-01-18T14:45:00Z",
-      "brand": "CarryLine",
-      "excerpt": "Stylish and functional backpack with padded laptop compartment (fits up to 15.6\"), multiple poc...",
-      "stock_quantity": 12,
-      "compare_at_price": 68.74
+      "created_at": "2026-01-06T13:15:00Z",
+      "updated_at": "2026-03-16T10:45:00Z",
+      "brand": "Moroccanoil",
+      "excerpt": "Iconic argan oil treatment that conditions, detangles, and adds brilliant shine.",
+      "stock_quantity": 15
     },
     {
       "id": "prod-011",
-      "name": "Coffee Maker with Timer",
-      "description": "Programmable coffee maker with 12-cup capacity, auto-brew timer, and keep-warm function. Perfect for your morning routine.",
-      "price": 69.99,
+      "name": "Dove Intensive Repair Shampoo",
+      "description": "Nourishing shampoo with keratin repair actives that penetrate deep to help repair visible signs of damage. Progressive nourishing formula gets better with every wash, leaving hair feeling stronger, smoother, and more resilient. Suitable for daily use.",
+      "price": 7.49,
       "currency": "USD",
       "images": [
-        "./assets/products/coffee-maker-1.jpg"
+        "https://placehold.co/600x600/eef1f5/1B2A3D?text=Dove%0AShampoo"
       ],
-      "category": "Home & Kitchen",
-      "tags": [
-        "coffee",
-        "kitchen appliance",
-        "programmable"
-      ],
+      "category": "Haircare",
+      "tags": ["shampoo", "repair", "keratin", "damaged hair", "nourishing"],
       "featured": false,
       "in_stock": true,
-      "created_at": "2026-01-06T08:00:00Z",
-      "updated_at": "2026-01-20T09:30:00Z",
-      "brand": "BrewCraft",
-      "excerpt": "Programmable coffee maker with 12-cup capacity, auto-brew timer, and keep-warm function. Perfec...",
-      "stock_quantity": 7
+      "created_at": "2026-01-05T08:00:00Z",
+      "updated_at": "2026-03-14T09:30:00Z",
+      "brand": "Dove",
+      "excerpt": "Nourishing shampoo with keratin actives that repair visible signs of damage.",
+      "stock_quantity": 88
     },
     {
       "id": "prod-012",
-      "name": "Resistance Bands Set",
-      "description": "Complete set of 5 resistance bands with different resistance levels, door anchor, handles, and carrying bag. Perfect for home workouts.",
-      "price": 27.99,
+      "name": "Victoria's Secret Bombshell EDP",
+      "description": "The world's bestselling fragrance — a sparkling mix of purple passion fruit, Shangri-La peony, and vanilla orchid. Seductive, effervescent scent opens with an irresistible burst of citrus and fruits, settling into a warm floral heart. 100ml Eau de Parfum.",
+      "price": 65.00,
       "currency": "USD",
       "images": [
-        "./assets/products/resistance-bands-1.jpg"
+        "https://placehold.co/600x600/B76E79/ffffff?text=VS%0ABombshell"
       ],
-      "category": "Sports & Fitness",
-      "tags": [
-        "fitness",
-        "resistance bands",
-        "workout",
-        "home gym"
+      "category": "Fragrance",
+      "tags": ["perfume", "eau de parfum", "floral", "fruity", "long-lasting"],
+      "featured": true,
+      "in_stock": true,
+      "created_at": "2026-01-04T11:00:00Z",
+      "updated_at": "2026-03-19T16:00:00Z",
+      "brand": "Victoria's Secret",
+      "excerpt": "World's bestselling fragrance — sparkling passion fruit, peony, and vanilla orchid.",
+      "stock_quantity": 12,
+      "compare_at_price": 78.00
+    },
+    {
+      "id": "prod-013",
+      "name": "The Ordinary AHA 30% + BHA 2% Peeling Solution",
+      "description": "10-minute exfoliating facial with alpha hydroxy acids and beta hydroxy acids. Contains Tasmanian pepperberry derivative to help reduce irritation associated with acid use. Targets textural irregularities, dullness, and visible blemishes for brighter, smoother-looking skin.",
+      "price": 8.70,
+      "currency": "USD",
+      "images": [
+        "https://placehold.co/600x600/B76E79/ffffff?text=The+Ordinary%0AAHA+BHA"
       ],
+      "category": "Skincare",
+      "tags": ["exfoliant", "peeling", "aha", "bha", "brightening", "texture"],
       "featured": false,
       "in_stock": true,
-      "created_at": "2026-01-05T11:00:00Z",
-      "updated_at": "2026-01-17T16:00:00Z",
-      "brand": "HomeFit",
-      "excerpt": "Complete set of 5 resistance bands with different resistance levels, door anchor, handles, and...",
-      "stock_quantity": 5
+      "created_at": "2026-01-03T14:30:00Z",
+      "updated_at": "2026-03-17T11:00:00Z",
+      "brand": "The Ordinary",
+      "excerpt": "10-minute exfoliating facial for brighter, smoother-looking skin.",
+      "stock_quantity": 41
+    },
+    {
+      "id": "prod-014",
+      "name": "CeraVe Hydrating Facial Cleanser",
+      "description": "Non-foaming, gel-to-cream facial cleanser that removes dirt and excess oil without disrupting the skin's natural barrier. Contains 3 essential ceramides and hyaluronic acid. Fragrance-free, non-comedogenic, suitable for normal-to-dry skin.",
+      "price": 15.99,
+      "currency": "USD",
+      "images": [
+        "https://placehold.co/600x600/eef1f5/1B2A3D?text=CeraVe%0ACleanser"
+      ],
+      "category": "Skincare",
+      "tags": ["cleanser", "hydrating", "ceramides", "gentle", "fragrance-free"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2026-01-02T09:45:00Z",
+      "updated_at": "2026-03-15T13:20:00Z",
+      "brand": "CeraVe",
+      "excerpt": "Gentle gel-to-cream cleanser with ceramides that hydrates while removing impurities.",
+      "stock_quantity": 56
+    },
+    {
+      "id": "prod-015",
+      "name": "Neutrogena Hydro Boost Gel-Cream",
+      "description": "Oil-free gel-cream moisturizer with hyaluronic acid — a hydrator naturally found in skin — that locks in hydration and keeps skin supple. Unique formula absorbs quickly like a gel but moisturizes like a cream. Non-comedogenic, dye-free, alcohol-free.",
+      "price": 22.99,
+      "currency": "USD",
+      "images": [
+        "https://placehold.co/600x600/f5e6e8/1B2A3D?text=Neutrogena%0AHydro+Boost"
+      ],
+      "category": "Skincare",
+      "tags": ["moisturizer", "gel-cream", "hyaluronic acid", "oil-free", "hydrating"],
+      "featured": false,
+      "in_stock": false,
+      "created_at": "2026-01-01T10:00:00Z",
+      "updated_at": "2026-03-20T08:00:00Z",
+      "brand": "Neutrogena",
+      "excerpt": "Oil-free gel-cream with hyaluronic acid that hydrates skin without heaviness.",
+      "stock_quantity": 0
+    },
+    {
+      "id": "prod-016",
+      "name": "NARS Radiant Creamy Concealer",
+      "description": "Award-winning concealer provides medium-to-full buildable coverage with a luminous finish. Multi-action formula enriched with botanical extracts that hydrate and smooth skin. Crease-proof, transfer-resistant wear. Available in 30 shades.",
+      "price": 32.00,
+      "currency": "USD",
+      "images": [
+        "https://placehold.co/600x600/1B2A3D/B76E79?text=NARS%0AConcealer"
+      ],
+      "category": "Makeup",
+      "tags": ["concealer", "coverage", "luminous", "crease-proof", "hydrating"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2025-12-28T09:30:00Z",
+      "updated_at": "2026-03-19T14:15:00Z",
+      "brand": "NARS",
+      "excerpt": "Award-winning concealer with medium-to-full buildable coverage and luminous finish.",
+      "stock_quantity": 7,
+      "compare_at_price": 38.00,
+      "variants": [
+        { "id": "prod-016-v1", "title": "Vanilla", "price": 32.00, "in_stock": true },
+        { "id": "prod-016-v2", "title": "Custard", "price": 32.00, "in_stock": true }
+      ]
+    },
+    {
+      "id": "prod-017",
+      "name": "L'Oréal Elvive Total Repair 5 Conditioner",
+      "description": "Restoring conditioner with protein and ceramide for damaged hair. Targets 5 signs of damage: split ends, dryness, roughness, dullness, and fragility. Lightweight formula detangles without weighing hair down. Clinically proven results after just one use.",
+      "price": 6.99,
+      "currency": "USD",
+      "images": [
+        "https://placehold.co/600x600/f5e6e8/1B2A3D?text=L%27Or%C3%A9al%0AElvive"
+      ],
+      "category": "Haircare",
+      "tags": ["conditioner", "repair", "damaged hair", "protein", "ceramide"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2025-12-25T10:00:00Z",
+      "updated_at": "2026-03-14T11:30:00Z",
+      "brand": "L'Oréal",
+      "excerpt": "Restoring conditioner with protein and ceramide targeting 5 signs of damage.",
+      "stock_quantity": 44
+    },
+    {
+      "id": "prod-018",
+      "name": "Avène Thermal Spring Water Spray",
+      "description": "Soothing, softening spray of Avène Thermal Spring Water — clinically proven to calm, restore, and soften skin. Unique low mineral content and neutral pH. Perfect as a refreshing face mist, post-procedure recovery, or setting spray. Suitable for all skin types.",
+      "price": 19.50,
+      "currency": "USD",
+      "images": [
+        "https://placehold.co/600x600/eef1f5/1B2A3D?text=Av%C3%A8ne%0ASpray"
+      ],
+      "category": "Skincare",
+      "tags": ["mist", "thermal water", "soothing", "calming", "sensitive skin"],
+      "featured": false,
+      "in_stock": true,
+      "created_at": "2025-12-20T08:00:00Z",
+      "updated_at": "2026-03-12T09:00:00Z",
+      "brand": "Avène",
+      "excerpt": "Soothing thermal spring water mist that calms, restores, and softens all skin types.",
+      "stock_quantity": 31
     }
   ]
 }

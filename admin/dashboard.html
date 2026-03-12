@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlowHaven — Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #c9a96e; --gold-light: #e2c992; --gold-deep: #9e7c45;
+      --navy: #1B2A3D; --navy-light: #243447;
+      --bg: #0f1923; --bg-surface: #162230; --bg-card: #1a2b3d;
+      --text: #f0e6d3; --text-dim: #8a9bb0; --text-muted: #5a6d82;
+      --border: rgba(201,169,110,0.12); --border-focus: rgba(201,169,110,0.4);
+      --danger: #e74c3c; --success: #2ecc71; --warning: #f39c12;
+      --radius: 10px; --radius-sm: 6px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* ── Login ── */
+    .login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .login-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; max-width: 400px; width: 100%; box-shadow: var(--shadow); }
+    .login-card h1 { color: var(--gold); font-size: 1.75rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
+    .login-card p { color: var(--text-dim); margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .login-card .error { color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    /* ── Layout ── */
+    .admin-layout { display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: var(--bg-surface); border-right: 1px solid var(--border); padding: 1.5rem 1rem; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100; }
+    .sidebar-brand { display: flex; align-items: center; gap: 0.6rem; color: var(--gold); font-size: 1.2rem; font-weight: 700; margin-bottom: 2rem; padding: 0 0.5rem; }
+    .sidebar-brand i { font-size: 1.4rem; }
+    .nav-group-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 1.5rem 0.5rem 0.5rem; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.75rem; color: var(--text-dim); text-decoration: none; border-radius: var(--radius-sm); transition: all 0.2s; cursor: pointer; font-size: 0.9rem; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+    .nav-item:hover { background: rgba(201,169,110,0.08); color: var(--text); }
+    .nav-item.active { background: rgba(201,169,110,0.12); color: var(--gold); font-weight: 600; }
+    .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; }
+    .main { flex: 1; margin-left: 260px; padding: 2rem 2.5rem; }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
+    .page-header h1 { font-size: 1.75rem; color: var(--text); }
+    .page-header p { color: var(--text-dim); font-size: 0.9rem; }
+    .header-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    /* ── Cards ── */
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .card-header h3 { color: var(--gold-light); font-size: 1rem; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .stat-card .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-card .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--gold); margin-top: 0.25rem; }
+
+    /* ── Forms ── */
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    input, textarea, select { width: 100%; padding: 0.65rem 0.85rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 0.9rem; transition: border-color 0.2s; font-family: inherit; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(201,169,110,0.08); }
+    textarea { resize: vertical; min-height: 80px; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .form-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── Buttons ── */
+    .btn { padding: 0.6rem 1.25rem; border: none; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.4rem; font-family: inherit; }
+    .btn-gold { background: var(--gold); color: var(--navy); }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-danger { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid rgba(231,76,60,0.2); }
+    .btn-danger:hover { background: rgba(231,76,60,0.25); }
+    .btn-success { background: rgba(46,204,113,0.15); color: var(--success); border: 1px solid rgba(46,204,113,0.2); }
+    .btn-success:hover { background: rgba(46,204,113,0.25); }
+    .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+    .btn-icon { width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-dim); cursor: pointer; transition: all 0.2s; }
+    .btn-icon:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-icon.delete:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* ── Toast ── */
+    .toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
+    .toast { padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; animation: slideIn 0.3s ease; box-shadow: var(--shadow); }
+    .toast-success { background: #0b3d1c; color: #6ee7a0; border: 1px solid rgba(46,204,113,0.2); }
+    .toast-error { background: #3d0b0b; color: #f87171; border: 1px solid rgba(231,76,60,0.2); }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* ── Sections ── */
+    .section-page { display: none; }
+    .section-page.active { display: block; }
+
+    /* ── List items ── */
+    .list-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 0.75rem; }
+    .list-item .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .list-item .item-header strong { color: var(--gold-light); font-size: 0.85rem; }
+    .list-item .item-actions { display: flex; gap: 0.35rem; }
+
+    /* ── Products ── */
+    .products-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .product-row { display: grid; grid-template-columns: 60px 1fr 100px 80px 80px 100px; gap: 1rem; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.85rem 1rem; }
+    .product-row img { width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-sm); background: var(--bg-card); }
+    .product-row .product-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+    .product-row .product-brand { font-size: 0.75rem; color: var(--text-muted); }
+    .product-row .product-price { font-weight: 700; color: var(--gold); }
+    .stock-in { color: var(--success); font-size: 0.8rem; }
+    .stock-out { color: var(--danger); font-size: 0.8rem; }
+
+    /* ── Modal ── */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow); }
+    .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--bg-surface); z-index: 1; }
+    .modal-header h2 { font-size: 1.25rem; color: var(--gold); }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.75rem; position: sticky; bottom: 0; background: var(--bg-surface); }
+
+    .toggle { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    .toggle input { width: auto; }
+
+    .search-bar { position: relative; max-width: 350px; }
+    .search-bar input { padding-left: 2.5rem; }
+    .search-bar i { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+    .empty-state h3 { color: var(--text-dim); margin-bottom: 0.5rem; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s; z-index: 200; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 1.5rem 1rem; }
+      .mobile-menu-btn { display: flex !important; }
+      .product-row { grid-template-columns: 50px 1fr 80px 60px; }
+      .product-row .product-stock, .product-row .product-actions-cell { display: none; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 901px) { .mobile-menu-btn { display: none !important; } .sidebar-backdrop { display: none !important; } }
+    .sidebar-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; }
+    .sidebar-backdrop.active { display: block; }
+    .mobile-menu-btn { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow); }
+  </style>
+</head>
+<body>
+
+<!-- ═════════════════════ LOGIN ═════════════════════ -->
+<div class="login-page" id="loginPage">
+  <div class="login-card">
+    <h1><i class="fas fa-spa"></i> GlowHaven</h1>
+    <p>Admin Dashboard — Enter your password to continue.</p>
+    <div class="form-group">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter admin password" autofocus>
+    </div>
+    <button class="btn btn-gold" style="width:100%" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    <p class="error" id="loginError"><i class="fas fa-exclamation-circle"></i> Invalid password</p>
+    <div class="form-group" style="margin-top:1rem;">
+      <label for="apiUrlInput">API URL</label>
+      <input type="url" id="apiUrlInput" placeholder="https://your-worker.workers.dev" value="">
+      <div class="form-hint">Your Cloudflare Worker URL</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ DASHBOARD ═════════════════════ -->
+<div class="admin-layout hidden" id="adminLayout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-spa"></i> GlowHaven</div>
+    <div class="nav-group-label">Overview</div>
+    <button class="nav-item active" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+    <div class="nav-group-label">Content</div>
+    <button class="nav-item" data-section="hero"><i class="fas fa-image"></i> Hero Section</button>
+    <button class="nav-item" data-section="announcements"><i class="fas fa-bullhorn"></i> Announcements</button>
+    <button class="nav-item" data-section="promoBanners"><i class="fas fa-rectangle-ad"></i> Promo Banners</button>
+    <button class="nav-item" data-section="whySection"><i class="fas fa-star"></i> Why Section</button>
+    <button class="nav-item" data-section="testimonials"><i class="fas fa-quote-right"></i> Testimonials</button>
+    <button class="nav-item" data-section="newsletter"><i class="fas fa-envelope"></i> Newsletter</button>
+    <div class="nav-group-label">Store</div>
+    <button class="nav-item" data-section="products"><i class="fas fa-box-open"></i> Products</button>
+    <div class="nav-group-label">Settings</div>
+    <button class="nav-item" data-section="siteSettings"><i class="fas fa-cog"></i> Site Settings</button>
+    <button class="nav-item" data-section="announcement"><i class="fas fa-clock"></i> Sale Timer</button>
+    <div style="margin-top:auto; padding-top:2rem; border-top:1px solid var(--border); margin-top:2rem;">
+      <button class="nav-item" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      <a class="nav-item" href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a>
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+
+  <div class="main">
+
+    <!-- Dashboard -->
+    <div class="section-page active" id="sec-dashboard">
+      <div class="page-header"><div><h1>Dashboard</h1><p>Overview of your store content</p></div></div>
+      <div class="stat-grid" id="statsGrid"></div>
+      <div class="card">
+        <div class="card-header"><h3>Quick Actions</h3></div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+          <button class="btn btn-gold" onclick="switchSection('products')"><i class="fas fa-plus"></i> Add Product</button>
+          <button class="btn btn-outline" onclick="switchSection('hero')"><i class="fas fa-edit"></i> Edit Hero</button>
+          <button class="btn btn-outline" onclick="switchSection('testimonials')"><i class="fas fa-quote-right"></i> Testimonials</button>
+          <button class="btn btn-outline" onclick="switchSection('siteSettings')"><i class="fas fa-cog"></i> Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="section-page" id="sec-hero">
+      <div class="page-header">
+        <div><h1>Hero Section</h1><p>Edit the main hero banner content</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('hero')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('hero')"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Title &amp; Badge</h3></div>
+        <div class="form-row">
+          <div class="form-group"><label>Badge Icon (FontAwesome)</label><input type="text" id="hero-badgeIcon" placeholder="fas fa-gem"></div>
+          <div class="form-group"><label>Badge Text</label><input type="text" id="hero-badge" placeholder="Premium Beauty Destination"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Title (before accent)</label><input type="text" id="hero-title" placeholder="Elevate Your"></div>
+          <div class="form-group"><label>Title Accent (gold text)</label><input type="text" id="hero-titleAccent" placeholder="Beauty Ritual"></div>
+        </div>
+        <div class="form-group"><label>Subtitle</label><textarea id="hero-subtitle" rows="2"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Trust Badges</h3><button class="btn btn-sm btn-outline" onclick="addHeroTrust()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="heroTrustList"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Featured Brands</h3><button class="btn btn-sm btn-outline" onclick="addHeroBrand()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="heroBrandsList"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>CTA Buttons</h3></div>
+        <div class="form-row-3">
+          <div class="form-group"><label>Primary Text</label><input type="text" id="hero-ctaPrimary-text"></div>
+          <div class="form-group"><label>Primary Link</label><input type="text" id="hero-ctaPrimary-href"></div>
+          <div class="form-group"><label>Primary Icon</label><input type="text" id="hero-ctaPrimary-icon"></div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group"><label>Secondary Text</label><input type="text" id="hero-ctaSecondary-text"></div>
+          <div class="form-group"><label>Secondary Link</label><input type="text" id="hero-ctaSecondary-href"></div>
+          <div class="form-group"><label>Secondary Icon</label><input type="text" id="hero-ctaSecondary-icon"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="section-page" id="sec-announcements">
+      <div class="page-header">
+        <div><h1>Announcement Bar</h1><p>Scrolling marquee items at the top</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('announcements')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('announcements')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Marquee Items</h3><button class="btn btn-sm btn-outline" onclick="addAnnouncement()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="announcementsList"></div>
+      </div>
+    </div>
+
+    <!-- Promo Banners -->
+    <div class="section-page" id="sec-promoBanners">
+      <div class="page-header">
+        <div><h1>Promo Banners</h1><p>Category promo cards below the hero</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('promoBanners')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('promoBanners')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Banners</h3><button class="btn btn-sm btn-outline" onclick="addPromoBanner()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="promoBannersList"></div>
+      </div>
+    </div>
+
+    <!-- Why Section -->
+    <div class="section-page" id="sec-whySection">
+      <div class="page-header">
+        <div><h1>Why Section</h1><p>"Why Shop with Us" feature cards</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('whySection')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('whySection')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card"><div class="form-group"><label>Section Title</label><input type="text" id="why-title"></div></div>
+      <div class="card">
+        <div class="card-header"><h3>Feature Cards</h3><button class="btn btn-sm btn-outline" onclick="addWhyCard()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="whyCardsList"></div>
+      </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="section-page" id="sec-testimonials">
+      <div class="page-header">
+        <div><h1>Testimonials</h1><p>Customer reviews section</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('testimonials')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('testimonials')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="form-row-3">
+          <div class="form-group"><label>Section Tag</label><input type="text" id="testimonials-sectionTag"></div>
+          <div class="form-group"><label>Title</label><input type="text" id="testimonials-title"></div>
+          <div class="form-group"><label>Subtitle</label><input type="text" id="testimonials-subtitle"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Reviews</h3><button class="btn btn-sm btn-outline" onclick="addTestimonial()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="testimonialsList"></div>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="section-page" id="sec-newsletter">
+      <div class="page-header">
+        <div><h1>Newsletter</h1><p>Newsletter section text</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('newsletter')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('newsletter')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="form-group"><label>Title</label><input type="text" id="newsletter-title"></div>
+        <div class="form-group"><label>Subtitle</label><textarea id="newsletter-subtitle" rows="2"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="section-page" id="sec-products">
+      <div class="page-header">
+        <div><h1>Products</h1><p>Manage your product catalog</p></div>
+        <div class="header-actions"><button class="btn btn-gold" onclick="openProductModal()"><i class="fas fa-plus"></i> Add Product</button></div>
+      </div>
+      <div style="display:flex;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+        <div class="search-bar" style="flex:1;"><i class="fas fa-search"></i><input type="text" id="productSearch" placeholder="Search products..." oninput="renderProducts()"></div>
+      </div>
+      <div id="productsList" class="products-list"></div>
+    </div>
+
+    <!-- Site Settings -->
+    <div class="section-page" id="sec-siteSettings">
+      <div class="page-header">
+        <div><h1>Site Settings</h1><p>General site configuration</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('siteSettings')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('siteSettings')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>General</h3></div>
+        <div class="form-row">
+          <div class="form-group"><label>Site Name</label><input type="text" id="settings-name"></div>
+          <div class="form-group"><label>Site Description</label><input type="text" id="settings-description"></div>
+        </div>
+        <div class="form-group"><label>Footer Description</label><textarea id="settings-footerDescription" rows="2"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>WhatsApp &amp; Currency</h3></div>
+        <div class="form-row-3">
+          <div class="form-group"><label>WhatsApp Number</label><input type="text" id="settings-whatsappNumber" placeholder="1234567890"><div class="form-hint">Country code + number, no + or spaces</div></div>
+          <div class="form-group"><label>Currency Code</label><input type="text" id="settings-currencyCode" placeholder="USD"></div>
+          <div class="form-group"><label>Currency Symbol</label><input type="text" id="settings-currencySymbol" placeholder="$"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Social Links</h3><button class="btn btn-sm btn-outline" onclick="addSocial()"><i class="fas fa-plus"></i> Add</button></div>
+        <div id="socialList"></div>
+      </div>
+    </div>
+
+    <!-- Sale Timer -->
+    <div class="section-page" id="sec-announcement">
+      <div class="page-header">
+        <div><h1>Sale Timer</h1><p>Countdown timer configuration</p></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="resetSection('announcement')"><i class="fas fa-undo"></i> Reset</button>
+          <button class="btn btn-gold" onclick="saveSection('announcement')"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="form-group"><label class="toggle"><input type="checkbox" id="timer-enabled"> Enable Sale Timer</label></div>
+        <div class="form-row">
+          <div class="form-group"><label>Label</label><input type="text" id="timer-label" placeholder="Beauty Sale Ends In"></div>
+          <div class="form-group"><label>End Date</label><input type="datetime-local" id="timer-endAt"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CTA Text</label><input type="text" id="timer-ctaText" placeholder="Shop Deals"></div>
+          <div class="form-group"><label>CTA Link</label><input type="text" id="timer-ctaHref" placeholder="#productsGrid"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="productModalTitle">Add Product</h2>
+      <button class="btn-icon" onclick="closeProductModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="prod-editIndex" value="-1">
+      <div class="form-row">
+        <div class="form-group"><label>Product ID</label><input type="text" id="prod-id" placeholder="prod-001"></div>
+        <div class="form-group"><label>Brand</label><input type="text" id="prod-brand" placeholder="CeraVe"></div>
+      </div>
+      <div class="form-group"><label>Product Name</label><input type="text" id="prod-name" placeholder="Product name"></div>
+      <div class="form-group"><label>Short Description</label><textarea id="prod-excerpt" rows="2" placeholder="Short card description..."></textarea></div>
+      <div class="form-group"><label>Full Description</label><textarea id="prod-description" rows="4" placeholder="Full product description..."></textarea></div>
+      <div class="form-row-3">
+        <div class="form-group"><label>Price</label><input type="number" id="prod-price" step="0.01" placeholder="18.99"></div>
+        <div class="form-group"><label>Compare At Price</label><input type="number" id="prod-comparePrice" step="0.01" placeholder="24.99"><div class="form-hint">Leave empty = no discount</div></div>
+        <div class="form-group"><label>Stock Qty</label><input type="number" id="prod-stock" placeholder="45"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Category</label>
+          <select id="prod-category"><option value="Skincare">Skincare</option><option value="Makeup">Makeup</option><option value="Haircare">Haircare</option><option value="Fragrance">Fragrance</option></select>
+        </div>
+        <div class="form-group"><label>Image URL</label><input type="url" id="prod-image" placeholder="https://..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="toggle"><input type="checkbox" id="prod-featured"> Featured Product</label></div>
+        <div class="form-group"><label class="toggle"><input type="checkbox" id="prod-inStock" checked> In Stock</label></div>
+      </div>
+      <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="prod-tags" placeholder="moisturizer, ceramides, dry skin"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveProduct()"><i class="fas fa-save"></i> Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════ */
+let API_URL = '';
+let AUTH_TOKEN = '';
+let siteData = {};
+
+/* ── Helpers ── */
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+async function api(path, method = 'GET', body = null) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (AUTH_TOKEN) opts.headers['Authorization'] = `Bearer ${AUTH_TOKEN}`;
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API_URL + path, opts);
+  return res.json();
+}
+
+function esc(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+
+/* ═══════════════════════════════════════════════
+   AUTH
+   ═══════════════════════════════════════════════ */
+async function doLogin() {
+  const pw = document.getElementById('loginPassword').value;
+  API_URL = document.getElementById('apiUrlInput').value.replace(/\/+$/, '');
+  if (!API_URL) { toast('Please enter your API URL', 'error'); return; }
+  if (!pw) { toast('Please enter a password', 'error'); return; }
+  try {
+    const res = await api('/admin/login', 'POST', { password: pw });
+    if (res.success) {
+      AUTH_TOKEN = res.token;
+      localStorage.setItem('gh_admin_token', AUTH_TOKEN);
+      localStorage.setItem('gh_api_url', API_URL);
+      showAdmin();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  } catch (e) { toast('Connection failed — check API URL', 'error'); }
+}
+
+function doLogout() {
+  AUTH_TOKEN = '';
+  localStorage.removeItem('gh_admin_token');
+  document.getElementById('adminLayout').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+}
+
+function showAdmin() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('adminLayout').classList.remove('hidden');
+  loadAllContent();
+}
+
+document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+(function autoLogin() {
+  const token = localStorage.getItem('gh_admin_token');
+  const url = localStorage.getItem('gh_api_url');
+  if (token && url) {
+    AUTH_TOKEN = token; API_URL = url;
+    document.getElementById('apiUrlInput').value = url;
+    api('/admin/check').then(r => { if (r.success) showAdmin(); else AUTH_TOKEN = ''; }).catch(() => { AUTH_TOKEN = ''; });
+  }
+})();
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════ */
+function switchSection(id) {
+  document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item[data-section]').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id)?.classList.add('active');
+  document.querySelector(`.nav-item[data-section="${id}"]`)?.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('active');
+}
+document.querySelectorAll('.nav-item[data-section]').forEach(btn => btn.addEventListener('click', () => switchSection(btn.dataset.section)));
+document.getElementById('mobileMenuBtn').addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarBackdrop').classList.add('active'); });
+document.getElementById('sidebarBackdrop').addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarBackdrop').classList.remove('active'); });
+
+/* ═══════════════════════════════════════════════
+   LOAD & POPULATE
+   ═══════════════════════════════════════════════ */
+async function loadAllContent() {
+  try {
+    const res = await api('/admin/content');
+    if (res.success) { siteData = res.data; populateAll(); updateStats(); }
+    else toast('Failed to load content', 'error');
+  } catch (e) { toast('Error: ' + e.message, 'error'); }
+}
+
+function updateStats() {
+  const prods = siteData.products?.products || [];
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Products</div><div class="stat-value">${prods.length}</div></div>
+    <div class="stat-card"><div class="stat-label">In Stock</div><div class="stat-value">${prods.filter(p=>p.in_stock).length}</div></div>
+    <div class="stat-card"><div class="stat-label">Featured</div><div class="stat-value">${prods.filter(p=>p.featured).length}</div></div>
+    <div class="stat-card"><div class="stat-label">Testimonials</div><div class="stat-value">${siteData.testimonials?.items?.length||0}</div></div>`;
+}
+
+function populateAll() { populateHero(); populateAnnouncements(); populatePromoBanners(); populateWhySection(); populateTestimonials(); populateNewsletter(); populateSettings(); populateTimer(); renderProducts(); }
+
+/* ── HERO ── */
+function populateHero() {
+  const h = siteData.hero || {};
+  document.getElementById('hero-badge').value = h.badge || '';
+  document.getElementById('hero-badgeIcon').value = h.badgeIcon || '';
+  document.getElementById('hero-title').value = h.title || '';
+  document.getElementById('hero-titleAccent').value = h.titleAccent || '';
+  document.getElementById('hero-subtitle').value = h.subtitle || '';
+  document.getElementById('hero-ctaPrimary-text').value = h.ctaPrimary?.text || '';
+  document.getElementById('hero-ctaPrimary-href').value = h.ctaPrimary?.href || '';
+  document.getElementById('hero-ctaPrimary-icon').value = h.ctaPrimary?.icon || '';
+  document.getElementById('hero-ctaSecondary-text').value = h.ctaSecondary?.text || '';
+  document.getElementById('hero-ctaSecondary-href').value = h.ctaSecondary?.href || '';
+  document.getElementById('hero-ctaSecondary-icon').value = h.ctaSecondary?.icon || '';
+  renderHeroTrust(); renderHeroBrands();
+}
+function renderHeroTrust() {
+  const items = siteData.hero?.trustItems || [];
+  document.getElementById('heroTrustList').innerHTML = items.map((it, i) => `
+    <div class="list-item"><div class="item-header"><strong>Badge #${i+1}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeHeroTrust(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-row"><div class="form-group"><label>Icon</label><input type="text" value="${esc(it.icon)}" onchange="siteData.hero.trustItems[${i}].icon=this.value"></div>
+    <div class="form-group"><label>Text</label><input type="text" value="${esc(it.text)}" onchange="siteData.hero.trustItems[${i}].text=this.value"></div></div></div>`).join('');
+}
+function addHeroTrust() { if (!siteData.hero) siteData.hero = {}; if (!siteData.hero.trustItems) siteData.hero.trustItems = []; siteData.hero.trustItems.push({icon:'fas fa-check',text:'New Badge'}); renderHeroTrust(); }
+function removeHeroTrust(i) { siteData.hero.trustItems.splice(i,1); renderHeroTrust(); }
+
+function renderHeroBrands() {
+  const brands = siteData.hero?.brands || [];
+  document.getElementById('heroBrandsList').innerHTML = brands.map((b, i) => `
+    <div class="list-item"><div class="item-header"><strong>${esc(b.name)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeHeroBrand(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-row"><div class="form-group"><label>Name</label><input type="text" value="${esc(b.name)}" onchange="siteData.hero.brands[${i}].name=this.value"></div>
+    <div class="form-group"><label>Link</label><input type="text" value="${esc(b.href)}" onchange="siteData.hero.brands[${i}].href=this.value"></div></div></div>`).join('');
+}
+function addHeroBrand() { if (!siteData.hero) siteData.hero = {}; if (!siteData.hero.brands) siteData.hero.brands = []; siteData.hero.brands.push({name:'New Brand',href:'./index.html?brand=New+Brand'}); renderHeroBrands(); }
+function removeHeroBrand(i) { siteData.hero.brands.splice(i,1); renderHeroBrands(); }
+
+/* ── ANNOUNCEMENTS ── */
+function populateAnnouncements() { renderAnnouncements(); }
+function renderAnnouncements() {
+  const items = siteData.announcements?.items || [];
+  document.getElementById('announcementsList').innerHTML = items.map((it,i) => `
+    <div class="list-item"><div class="item-header"><strong>Item #${i+1}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeAnnouncement(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-row"><div class="form-group"><label>Icon</label><input type="text" value="${esc(it.icon)}" onchange="siteData.announcements.items[${i}].icon=this.value"></div>
+    <div class="form-group"><label>Text</label><input type="text" value="${esc(it.text)}" onchange="siteData.announcements.items[${i}].text=this.value"></div></div></div>`).join('');
+}
+function addAnnouncement() { if (!siteData.announcements) siteData.announcements = {items:[]}; siteData.announcements.items.push({icon:'fas fa-tag',text:'NEW ANNOUNCEMENT'}); renderAnnouncements(); }
+function removeAnnouncement(i) { siteData.announcements.items.splice(i,1); renderAnnouncements(); }
+
+/* ── PROMO BANNERS ── */
+function populatePromoBanners() { renderPromoBanners(); }
+function renderPromoBanners() {
+  const banners = siteData.promoBanners?.banners || [];
+  document.getElementById('promoBannersList').innerHTML = banners.map((b,i) => `
+    <div class="list-item"><div class="item-header"><strong>${esc(b.title)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removePromoBanner(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-row-3"><div class="form-group"><label>Tag</label><input type="text" value="${esc(b.tag)}" onchange="siteData.promoBanners.banners[${i}].tag=this.value"></div>
+    <div class="form-group"><label>Title</label><input type="text" value="${esc(b.title)}" onchange="siteData.promoBanners.banners[${i}].title=this.value"></div>
+    <div class="form-group"><label>Icon</label><input type="text" value="${esc(b.icon)}" onchange="siteData.promoBanners.banners[${i}].icon=this.value"></div></div>
+    <div class="form-group"><label>Description</label><textarea rows="2" onchange="siteData.promoBanners.banners[${i}].description=this.value">${esc(b.description)}</textarea></div>
+    <div class="form-row-3"><div class="form-group"><label>CTA Text</label><input type="text" value="${esc(b.ctaText)}" onchange="siteData.promoBanners.banners[${i}].ctaText=this.value"></div>
+    <div class="form-group"><label>Link</label><input type="text" value="${esc(b.href)}" onchange="siteData.promoBanners.banners[${i}].href=this.value"></div>
+    <div class="form-group"><label>CSS Class</label><input type="text" value="${esc(b.cssClass)}" onchange="siteData.promoBanners.banners[${i}].cssClass=this.value"><div class="form-hint">e.g. promo-card-skincare</div></div></div></div>`).join('');
+}
+function addPromoBanner() { if (!siteData.promoBanners) siteData.promoBanners = {banners:[]}; siteData.promoBanners.banners.push({tag:'New',title:'New Banner',description:'',ctaText:'Shop Now',href:'#',icon:'fas fa-star',cssClass:'promo-card-skincare'}); renderPromoBanners(); }
+function removePromoBanner(i) { siteData.promoBanners.banners.splice(i,1); renderPromoBanners(); }
+
+/* ── WHY SECTION ── */
+function populateWhySection() { document.getElementById('why-title').value = siteData.whySection?.title || ''; renderWhyCards(); }
+function renderWhyCards() {
+  const cards = siteData.whySection?.cards || [];
+  document.getElementById('whyCardsList').innerHTML = cards.map((c,i) => `
+    <div class="list-item"><div class="item-header"><strong>${esc(c.title)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeWhyCard(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-row-3"><div class="form-group"><label>Icon</label><input type="text" value="${esc(c.icon)}" onchange="siteData.whySection.cards[${i}].icon=this.value"></div>
+    <div class="form-group"><label>Title</label><input type="text" value="${esc(c.title)}" onchange="siteData.whySection.cards[${i}].title=this.value"></div>
+    <div class="form-group"><label>Description</label><input type="text" value="${esc(c.description)}" onchange="siteData.whySection.cards[${i}].description=this.value"></div></div></div>`).join('');
+}
+function addWhyCard() { if (!siteData.whySection) siteData.whySection = {title:'',cards:[]}; siteData.whySection.cards.push({icon:'fas fa-star',title:'New Feature',description:'Description...'}); renderWhyCards(); }
+function removeWhyCard(i) { siteData.whySection.cards.splice(i,1); renderWhyCards(); }
+
+/* ── TESTIMONIALS ── */
+function populateTestimonials() {
+  document.getElementById('testimonials-sectionTag').value = siteData.testimonials?.sectionTag || '';
+  document.getElementById('testimonials-title').value = siteData.testimonials?.title || '';
+  document.getElementById('testimonials-subtitle').value = siteData.testimonials?.subtitle || '';
+  renderTestimonials();
+}
+function renderTestimonials() {
+  const items = siteData.testimonials?.items || [];
+  document.getElementById('testimonialsList').innerHTML = items.map((t,i) => `
+    <div class="list-item"><div class="item-header"><strong>${esc(t.authorName)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeTestimonial(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-group"><label>Review Text</label><textarea rows="3" onchange="siteData.testimonials.items[${i}].text=this.value">${esc(t.text)}</textarea></div>
+    <div class="form-row-3"><div class="form-group"><label>Stars (1-5)</label><input type="number" min="1" max="5" value="${t.stars||5}" onchange="siteData.testimonials.items[${i}].stars=parseInt(this.value)"></div>
+    <div class="form-group"><label>Author</label><input type="text" value="${esc(t.authorName)}" onchange="siteData.testimonials.items[${i}].authorName=this.value"></div>
+    <div class="form-group"><label>Label</label><input type="text" value="${esc(t.authorLabel)}" onchange="siteData.testimonials.items[${i}].authorLabel=this.value"></div></div></div>`).join('');
+}
+function addTestimonial() { if (!siteData.testimonials) siteData.testimonials = {items:[]}; if (!siteData.testimonials.items) siteData.testimonials.items = []; siteData.testimonials.items.push({stars:5,text:'"Great experience!"',authorName:'Customer',authorLabel:'Verified Buyer'}); renderTestimonials(); }
+function removeTestimonial(i) { siteData.testimonials.items.splice(i,1); renderTestimonials(); }
+
+/* ── NEWSLETTER ── */
+function populateNewsletter() { document.getElementById('newsletter-title').value = siteData.newsletter?.title || ''; document.getElementById('newsletter-subtitle').value = siteData.newsletter?.subtitle || ''; }
+
+/* ── SITE SETTINGS ── */
+function populateSettings() {
+  const s = siteData.siteSettings || {};
+  document.getElementById('settings-name').value = s.name || '';
+  document.getElementById('settings-description').value = s.description || '';
+  document.getElementById('settings-footerDescription').value = s.footerDescription || '';
+  document.getElementById('settings-whatsappNumber').value = s.whatsappNumber || '';
+  document.getElementById('settings-currencyCode').value = s.currencyCode || '';
+  document.getElementById('settings-currencySymbol').value = s.currencySymbol || '';
+  renderSocialList();
+}
+function renderSocialList() {
+  const socials = siteData.siteSettings?.social || [];
+  document.getElementById('socialList').innerHTML = socials.map((s,i) => `
+    <div class="list-item"><div class="item-header"><strong>${esc(s.platform)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeSocial(${i})"><i class="fas fa-trash"></i></button></div></div>
+    <div class="form-row-3"><div class="form-group"><label>Platform</label><input type="text" value="${esc(s.platform)}" onchange="siteData.siteSettings.social[${i}].platform=this.value"></div>
+    <div class="form-group"><label>URL</label><input type="text" value="${esc(s.href)}" onchange="siteData.siteSettings.social[${i}].href=this.value"></div>
+    <div class="form-group"><label>Icon</label><input type="text" value="${esc(s.icon)}" onchange="siteData.siteSettings.social[${i}].icon=this.value"></div></div></div>`).join('');
+}
+function addSocial() { if (!siteData.siteSettings) siteData.siteSettings = {}; if (!siteData.siteSettings.social) siteData.siteSettings.social = []; siteData.siteSettings.social.push({platform:'New',href:'#',icon:'fab fa-link'}); renderSocialList(); }
+function removeSocial(i) { siteData.siteSettings.social.splice(i,1); renderSocialList(); }
+
+/* ── TIMER ── */
+function populateTimer() {
+  const a = siteData.announcement || {};
+  document.getElementById('timer-enabled').checked = a.enabled !== false;
+  document.getElementById('timer-label').value = a.label || '';
+  document.getElementById('timer-ctaText').value = a.ctaText || '';
+  document.getElementById('timer-ctaHref').value = a.ctaHref || '';
+  if (a.endAt) { try { document.getElementById('timer-endAt').value = new Date(a.endAt).toISOString().slice(0,16); } catch(e){} }
+}
+
+/* ═══════════════════════════════════════════════
+   COLLECT & SAVE
+   ═══════════════════════════════════════════════ */
+function collectSectionData(key) {
+  switch (key) {
+    case 'hero': return {
+      badge: document.getElementById('hero-badge').value, badgeIcon: document.getElementById('hero-badgeIcon').value,
+      title: document.getElementById('hero-title').value, titleAccent: document.getElementById('hero-titleAccent').value,
+      subtitle: document.getElementById('hero-subtitle').value,
+      trustItems: siteData.hero?.trustItems || [], brands: siteData.hero?.brands || [],
+      ctaPrimary: { text: document.getElementById('hero-ctaPrimary-text').value, href: document.getElementById('hero-ctaPrimary-href').value, icon: document.getElementById('hero-ctaPrimary-icon').value },
+      ctaSecondary: { text: document.getElementById('hero-ctaSecondary-text').value, href: document.getElementById('hero-ctaSecondary-href').value, icon: document.getElementById('hero-ctaSecondary-icon').value },
+    };
+    case 'announcements': return siteData.announcements;
+    case 'promoBanners': return siteData.promoBanners;
+    case 'whySection': return { title: document.getElementById('why-title').value, cards: siteData.whySection?.cards || [] };
+    case 'testimonials': return {
+      sectionTag: document.getElementById('testimonials-sectionTag').value, title: document.getElementById('testimonials-title').value,
+      subtitle: document.getElementById('testimonials-subtitle').value, items: siteData.testimonials?.items || [],
+    };
+    case 'newsletter': return { title: document.getElementById('newsletter-title').value, subtitle: document.getElementById('newsletter-subtitle').value };
+    case 'siteSettings': return {
+      name: document.getElementById('settings-name').value, description: document.getElementById('settings-description').value,
+      footerDescription: document.getElementById('settings-footerDescription').value, whatsappNumber: document.getElementById('settings-whatsappNumber').value,
+      currencyCode: document.getElementById('settings-currencyCode').value, currencySymbol: document.getElementById('settings-currencySymbol').value,
+      social: siteData.siteSettings?.social || [],
+    };
+    case 'announcement': return {
+      enabled: document.getElementById('timer-enabled').checked, label: document.getElementById('timer-label').value,
+      ctaText: document.getElementById('timer-ctaText').value, ctaHref: document.getElementById('timer-ctaHref').value,
+      endAt: document.getElementById('timer-endAt').value ? new Date(document.getElementById('timer-endAt').value).toISOString() : '',
+    };
+    default: return siteData[key];
+  }
+}
+
+async function saveSection(key) {
+  const data = collectSectionData(key);
+  try {
+    const res = await api(`/admin/content/${key}`, 'POST', data);
+    if (res.success) { siteData[key] = data; toast(`${key} saved!`); updateStats(); }
+    else toast(res.error || 'Save failed', 'error');
+  } catch (e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function resetSection(key) {
+  if (!confirm(`Reset "${key}" to defaults? This cannot be undone.`)) return;
+  try {
+    const res = await api(`/admin/reset/${key}`, 'POST');
+    if (res.success) { siteData[key] = res.data; populateAll(); toast(`${key} reset`); }
+    else toast(res.error || 'Reset failed', 'error');
+  } catch (e) { toast('Error: ' + e.message, 'error'); }
+}
+
+/* ═══════════════════════════════════════════════
+   PRODUCTS
+   ═══════════════════════════════════════════════ */
+function getProducts() { return siteData.products?.products || []; }
+
+function renderProducts() {
+  const products = getProducts();
+  const q = (document.getElementById('productSearch').value || '').toLowerCase();
+  const filtered = q ? products.filter(p => (p.name + p.brand + p.category).toLowerCase().includes(q)) : products;
+  if (!filtered.length) {
+    document.getElementById('productsList').innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><h3>No products</h3><p>${q?'No match':'Add your first product'}</p></div>`;
+    return;
+  }
+  const sym = siteData.siteSettings?.currencySymbol || '$';
+  document.getElementById('productsList').innerHTML = filtered.map(p => {
+    const ri = products.indexOf(p);
+    const img = p.images?.[0] || 'https://placehold.co/50x50/1a2b3d/c9a96e?text=?';
+    return `<div class="product-row">
+      <img src="${esc(img)}" alt="${esc(p.name)}" onerror="this.src='https://placehold.co/50x50/1a2b3d/c9a96e?text=?'">
+      <div><div class="product-name">${esc(p.name)}</div><div class="product-brand">${esc(p.brand)} · ${esc(p.category)}</div></div>
+      <div class="product-price">${sym}${(p.price||0).toFixed(2)}</div>
+      <div class="${p.in_stock?'stock-in':'stock-out'}">${p.in_stock?'In Stock':'Out'}</div>
+      <div>${p.featured?'<span style="color:var(--gold);font-size:0.75rem"><i class="fas fa-star"></i> Featured</span>':''}</div>
+      <div style="display:flex;gap:0.35rem"><button class="btn-icon" onclick="editProduct(${ri})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon delete" onclick="deleteProduct(${ri})" title="Delete"><i class="fas fa-trash"></i></button></div>
+    </div>`;
+  }).join('');
+}
+
+function openProductModal(idx = -1) {
+  document.getElementById('prod-editIndex').value = idx;
+  document.getElementById('productModalTitle').textContent = idx >= 0 ? 'Edit Product' : 'Add Product';
+  const p = idx >= 0 ? getProducts()[idx] : {};
+  document.getElementById('prod-id').value = p.id || `prod-${String(getProducts().length+1).padStart(3,'0')}`;
+  document.getElementById('prod-name').value = p.name || '';
+  document.getElementById('prod-brand').value = p.brand || '';
+  document.getElementById('prod-excerpt').value = p.excerpt || '';
+  document.getElementById('prod-description').value = p.description || '';
+  document.getElementById('prod-price').value = p.price || '';
+  document.getElementById('prod-comparePrice').value = p.compare_at_price || '';
+  document.getElementById('prod-stock').value = p.stock_quantity || '';
+  document.getElementById('prod-category').value = p.category || 'Skincare';
+  document.getElementById('prod-image').value = p.images?.[0] || '';
+  document.getElementById('prod-featured').checked = !!p.featured;
+  document.getElementById('prod-inStock').checked = p.in_stock !== false;
+  document.getElementById('prod-tags').value = (p.tags||[]).join(', ');
+  document.getElementById('productModal').classList.add('active');
+}
+function closeProductModal() { document.getElementById('productModal').classList.remove('active'); }
+function editProduct(idx) { openProductModal(idx); }
+
+async function saveProduct() {
+  const idx = parseInt(document.getElementById('prod-editIndex').value);
+  const product = {
+    id: document.getElementById('prod-id').value, name: document.getElementById('prod-name').value,
+    brand: document.getElementById('prod-brand').value, excerpt: document.getElementById('prod-excerpt').value,
+    description: document.getElementById('prod-description').value,
+    price: parseFloat(document.getElementById('prod-price').value) || 0,
+    currency: siteData.siteSettings?.currencyCode || 'USD',
+    images: [document.getElementById('prod-image').value].filter(Boolean),
+    category: document.getElementById('prod-category').value,
+    featured: document.getElementById('prod-featured').checked, in_stock: document.getElementById('prod-inStock').checked,
+    stock_quantity: parseInt(document.getElementById('prod-stock').value) || 0,
+    tags: document.getElementById('prod-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    created_at: idx >= 0 ? getProducts()[idx].created_at : new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  const cmp = parseFloat(document.getElementById('prod-comparePrice').value);
+  if (cmp > 0) product.compare_at_price = cmp;
+  if (!product.name) { toast('Product name is required', 'error'); return; }
+  if (!siteData.products) siteData.products = { products: [] };
+  if (idx >= 0) siteData.products.products[idx] = product; else siteData.products.products.push(product);
+  try {
+    const res = await api('/admin/content/products', 'POST', siteData.products);
+    if (res.success) { toast(idx >= 0 ? 'Product updated!' : 'Product added!'); closeProductModal(); renderProducts(); updateStats(); }
+    else toast(res.error || 'Failed', 'error');
+  } catch (e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function deleteProduct(idx) {
+  if (!confirm('Delete this product?')) return;
+  siteData.products.products.splice(idx, 1);
+  try {
+    const res = await api('/admin/content/products', 'POST', siteData.products);
+    if (res.success) { toast('Product deleted'); renderProducts(); updateStats(); }
+    else toast(res.error || 'Failed', 'error');
+  } catch (e) { toast('Error: ' + e.message, 'error'); }
+}
+
+document.getElementById('productModal').addEventListener('click', e => { if (e.target === document.getElementById('productModal')) closeProductModal(); });
+</script>
+</body>
+</html>

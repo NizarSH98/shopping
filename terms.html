@@ -3,16 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms of Service | My Shop</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <title>Terms of Service | GlowHaven</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-top">
+      <a class="brand" href="./index.html" aria-label="GlowHaven home">
+        <i class="fas fa-spa" aria-hidden="true"></i>
+        <span>GlowHaven</span>
+      </a>
+      <nav class="utility-nav" aria-label="Store links">
+        <a href="./index.html">Shop</a>
+        <a href="./brands.html">Brands</a>
+        <a href="./rewards.html">Rewards</a>
+        <a href="./contact.html">Contact</a>
+      </nav>
+      <a href="./search.html" class="icon-button" aria-label="Search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
   <main class="container static-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="./index.html">Home</a>
+      <span>/</span>
+      <strong>Terms of Service</strong>
+    </nav>
+
     <section class="static-section-card">
       <h1>Terms of Service</h1>
-      <p>This placeholder terms page describes usage rules, ordering terms, and liability limits. Replace with your legal terms before publishing.</p>
+      <p>By using our website and placing orders, you agree to the following terms and conditions. Please read them carefully before making a purchase.</p>
+
+      <h3>General Conditions</h3>
+      <p>We reserve the right to refuse service to anyone for any reason at any time. Prices for our products are subject to change without notice.</p>
+
+      <h3>Accuracy of Information</h3>
+      <p>We make every effort to display our products and their descriptions accurately. However, we do not guarantee that product images, descriptions, or pricing will always be error-free or complete.</p>
+
+      <h3>Products & Orders</h3>
+      <ul>
+        <li>All orders are subject to availability</li>
+        <li>We reserve the right to limit quantities on any order</li>
+        <li>Product specifications may change without prior notice</li>
+        <li>Delivery times are estimates and not guaranteed</li>
+      </ul>
+
+      <h3>Modifications</h3>
+      <p>We reserve the right to update, change, or replace any part of these terms at our sole discretion. Your continued use of the site following any changes constitutes acceptance of those changes.</p>
+
+      <h3>Contact</h3>
+      <p>Questions about these terms? Please reach out via our <a href="./contact.html" style="color: var(--rose); font-weight: 500;">contact page</a>.</p>
+
+      <p><em>Last updated: March 2026</em></p>
     </section>
   </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a class="footer-logo" href="./index.html">
+            <i class="fas fa-spa"></i> GlowHaven
+          </a>
+          <p>Your trusted beauty destination. Authentic products from the world's best brands.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>Shop</h4>
+            <a href="./index.html">All Products</a>
+            <a href="./brands.html">Shop by Brand</a>
+            <a href="./rewards.html">Promotions</a>
+          </div>
+          <div>
+            <h4>Support</h4>
+            <a href="./contact.html">Contact Us</a>
+            <a href="./search.html">Search</a>
+            <a href="./rewards.html">Rewards</a>
+          </div>
+          <div>
+            <h4>Policies</h4>
+            <a href="./privacy.html">Privacy Policy</a>
+            <a href="./refund.html">Refund Policy</a>
+            <a href="./terms.html">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 GlowHaven. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

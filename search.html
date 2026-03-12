@@ -3,35 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search | My Shop</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <title>Search | GlowHaven</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+
+  <!-- Header -->
   <header class="site-header">
     <div class="container header-top">
-      <a class="brand" href="./index.html"><i class="fas fa-shopping-bag" aria-hidden="true"></i><span>My Shop</span></a>
-      <nav class="utility-nav"><a href="./index.html">Collection</a><a href="./brands.html">Brands</a><a href="./contact.html">Contact</a></nav>
+      <a class="brand" href="./index.html" aria-label="GlowHaven home">
+        <i class="fas fa-spa" aria-hidden="true"></i>
+        <span>GlowHaven</span>
+      </a>
+      <nav class="utility-nav" aria-label="Store links">
+        <a href="./index.html">Shop</a>
+        <a href="./brands.html">Brands</a>
+        <a href="./rewards.html">Rewards</a>
+        <a href="./contact.html">Contact</a>
+      </nav>
+      <a href="./search.html" class="icon-button" aria-label="Search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </a>
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="container static-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="./index.html">Home</a>
+      <span>/</span>
+      <strong>Search</strong>
+    </nav>
+
     <section class="static-section-card">
-      <h1>Search</h1>
-      <p>Search across our full collection and jump to filtered results instantly.</p>
-      <form class="newsletter-form" id="searchRouteForm">
+      <h1>Search Products</h1>
+      <p>Search our beauty collection — skincare, makeup, haircare, fragrances and more.</p>
+      <form class="newsletter-form" id="searchRouteForm" style="margin-top: 1.5rem;">
         <label class="sr-only" for="searchRouteInput">Search products</label>
-        <input type="search" id="searchRouteInput" placeholder="Search products..." required>
-        <button type="submit">Search</button>
+        <input type="search" id="searchRouteInput" placeholder="Try 'moisturizer', 'lipstick', 'serum'..." required>
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
       </form>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div><h4>Shop</h4><a href="./index.html">All Products</a><a href="./brands.html">Shop by Brand</a></div>
-      <div><h4>Policies</h4><a href="./privacy.html">Privacy Policy</a><a href="./refund.html">Refund Policy</a><a href="./terms.html">Terms</a></div>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a class="footer-logo" href="./index.html">
+            <i class="fas fa-spa"></i> GlowHaven
+          </a>
+          <p>Your trusted beauty destination. Authentic products from the world's best brands.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>Shop</h4>
+            <a href="./index.html">All Products</a>
+            <a href="./brands.html">Shop by Brand</a>
+            <a href="./rewards.html">Promotions</a>
+          </div>
+          <div>
+            <h4>Support</h4>
+            <a href="./contact.html">Contact Us</a>
+            <a href="./search.html">Search</a>
+            <a href="./rewards.html">Rewards</a>
+          </div>
+          <div>
+            <h4>Policies</h4>
+            <a href="./privacy.html">Privacy Policy</a>
+            <a href="./refund.html">Refund Policy</a>
+            <a href="./terms.html">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 GlowHaven. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 

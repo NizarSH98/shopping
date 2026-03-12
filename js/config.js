@@ -18,21 +18,21 @@ export const CONFIG = {
 
     // Site Configuration
     site: {
-        name: 'My Shop',
-        description: 'Quality Products at Great Prices',
+        name: 'GlowHaven',
+        description: 'Your Beauty Destination — Skincare, Makeup & More',
         // GitHub Pages base path (set to '' if using custom domain)
         // For project sites: '/repository-name'
         // For user/org sites: ''
         basePath: '',
         // Product data source - use Worker API instead of JSON file
-        productsDataUrl: 'https://oauth-proxy.jabernizar98.workers.dev/api/products',
+        productsDataUrl: 'https://glowhaven-api.jabernizar98.workers.dev/api/products',
         // Fallback to local JSON if Worker is unavailable
         fallbackDataUrl: './data/products.json'
     },
 
     announcement: {
         enabled: true,
-        label: 'Spring Promo Ends In',
+        label: 'Beauty Sale Ends In',
         ctaText: 'Shop Deals',
         ctaHref: '#productsGrid',
         endAt: '2026-12-31T23:59:59Z'
@@ -51,38 +51,35 @@ export const CONFIG = {
         ],
         categories: [
             {
-                label: 'Electronics',
+                label: 'Skincare',
                 children: [
-                    { label: 'Audio', category: 'Electronics' },
-                    { label: 'Wearables', category: 'Electronics' },
-                    { label: 'Power & Charging', category: 'Electronics' }
+                    { label: 'Moisturizers', category: 'Skincare' },
+                    { label: 'Cleansers', category: 'Skincare' },
+                    { label: 'Serums', category: 'Skincare' },
+                    { label: 'Sunscreen', category: 'Skincare' }
                 ]
             },
             {
-                label: 'Home & Kitchen',
+                label: 'Makeup',
                 children: [
-                    { label: 'Cookware', category: 'Home & Kitchen' },
-                    { label: 'Coffee', category: 'Home & Kitchen' },
-                    { label: 'Lighting', category: 'Home & Kitchen' }
+                    { label: 'Face', category: 'Makeup' },
+                    { label: 'Lips', category: 'Makeup' },
+                    { label: 'Eyes', category: 'Makeup' }
                 ]
             },
             {
-                label: 'Sports & Fitness',
+                label: 'Haircare',
                 children: [
-                    { label: 'Yoga', category: 'Sports & Fitness' },
-                    { label: 'Training', category: 'Sports & Fitness' }
+                    { label: 'Shampoo & Conditioner', category: 'Haircare' },
+                    { label: 'Treatments', category: 'Haircare' },
+                    { label: 'Styling', category: 'Haircare' }
                 ]
             },
             {
-                label: 'Clothing',
+                label: 'Fragrance',
                 children: [
-                    { label: 'Tops', category: 'Clothing' }
-                ]
-            },
-            {
-                label: 'Accessories',
-                children: [
-                    { label: 'Bags', category: 'Accessories' }
+                    { label: 'Women\'s Perfume', category: 'Fragrance' },
+                    { label: 'Gift Sets', category: 'Fragrance' }
                 ]
             }
         ]

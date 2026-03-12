@@ -63,11 +63,15 @@ let currentPage = 1;
 const params = new URLSearchParams(window.location.search);
 const initialQuery = params.get('q');
 const initialBrand = params.get('brand');
+const initialCategory = params.get('category');
 if (initialQuery) {
     searchQuery = initialQuery;
 }
 if (initialBrand) {
     currentFilters.brand = initialBrand;
+}
+if (initialCategory) {
+    currentFilters.category = initialCategory;
 }
 
 // Debounce timer
@@ -98,6 +102,10 @@ async function init() {
         if (initialBrand) {
             const brandFilter = document.getElementById('brandFilter');
             if (brandFilter) brandFilter.value = initialBrand;
+        }
+        if (initialCategory) {
+            const categoryFilter = document.getElementById('categoryFilter');
+            if (categoryFilter) categoryFilter.value = initialCategory;
         }
         setProductViewMode(currentView);
 
