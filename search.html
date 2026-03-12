@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search | My Shop</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-top">
+      <a class="brand" href="./index.html"><i class="fas fa-shopping-bag" aria-hidden="true"></i><span>My Shop</span></a>
+      <nav class="utility-nav"><a href="./index.html">Collection</a><a href="./brands.html">Brands</a><a href="./contact.html">Contact</a></nav>
+    </div>
+  </header>
+
+  <main class="container static-page">
+    <section class="static-section-card">
+      <h1>Search</h1>
+      <p>Search across our full collection and jump to filtered results instantly.</p>
+      <form class="newsletter-form" id="searchRouteForm">
+        <label class="sr-only" for="searchRouteInput">Search products</label>
+        <input type="search" id="searchRouteInput" placeholder="Search products..." required>
+        <button type="submit">Search</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><h4>Shop</h4><a href="./index.html">All Products</a><a href="./brands.html">Shop by Brand</a></div>
+      <div><h4>Policies</h4><a href="./privacy.html">Privacy Policy</a><a href="./refund.html">Refund Policy</a><a href="./terms.html">Terms</a></div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('searchRouteForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const q = document.getElementById('searchRouteInput').value.trim();
+      window.location.href = `./index.html${q ? `?q=${encodeURIComponent(q)}` : ''}`;
+    });
+  </script>
+</body>
+</html>

@@ -1,197 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Quality products at great prices. Shop our collection of electronics, clothing, home goods, and more.">
-    <title>My Shop - Quality Products at Great Prices</title>
-    
-    <!-- Pico CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="./css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quality products at great prices. Shop our collection of electronics, clothing, home goods, and more.">
+  <title>My Shop - Collection</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="site-header">
-        <nav class="container">
-            <ul>
-                <li><strong><i class="fas fa-shopping-bag"></i> My Shop</strong></li>
-            </ul>
-            <ul>
-                <li>
-                    <button class="cart-button" id="cartButton" aria-label="Shopping Cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge" id="cartBadge">0</span>
-                    </button>
-                </li>
-            </ul>
-        </nav>
-    </header>
+  <div class="announcement-bar" id="announcementBar">
+    <div class="container announcement-inner">
+      <p><strong>Spring Promo Ends In:</strong> <span id="announcementCountdown">00d 00h 00m 00s</span></p>
+      <a href="#productsGrid">Shop deals</a>
+    </div>
+  </div>
 
-    <!-- Main Content -->
-    <main class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1>Welcome to My Shop</h1>
-            <p>Quality Products at Great Prices</p>
-        </section>
+  <header class="site-header">
+    <div class="container header-top">
+      <button class="icon-button menu-trigger" id="openDrawer" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
+        <i class="fas fa-bars"></i>
+      </button>
 
-        <!-- Search and Filters -->
-        <section class="controls-section">
-            <div class="search-box">
-                <input 
-                    type="search" 
-                    id="searchInput" 
-                    placeholder="Search products..."
-                    aria-label="Search products"
-                >
-            </div>
+      <a class="brand" href="./index.html" aria-label="My Shop home">
+        <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+        <span>My Shop</span>
+      </a>
 
-            <div class="filters-row">
-                <div class="filter-group">
-                    <label for="categoryFilter">
-                        <i class="fas fa-filter"></i> Category
-                    </label>
-                    <select id="categoryFilter">
-                        <option value="">All Categories</option>
-                    </select>
-                </div>
+      <nav class="utility-nav" aria-label="Store links">
+        <a href="#productsGrid">Promotions</a>
+        <a href="./rewards.html">Rewards</a>
+        <a href="./contact.html">Contact</a>
+      </nav>
 
-                <div class="filter-group">
-                    <label for="sortSelect">
-                        <i class="fas fa-sort"></i> Sort By
-                    </label>
-                    <select id="sortSelect">
-                        <option value="featured">Featured</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>
-                        <input type="checkbox" id="inStockFilter">
-                        In Stock Only
-                    </label>
-                </div>
-
-                <div class="filter-group price-range">
-                    <label for="priceRange">
-                        <i class="fas fa-dollar-sign"></i> Max Price: <span id="priceValue">$200</span>
-                    </label>
-                    <input 
-                        type="range" 
-                        id="priceRange" 
-                        min="0" 
-                        max="200" 
-                        value="200"
-                        step="5"
-                    >
-                </div>
-            </div>
-        </section>
-
-        <!-- Results Info -->
-        <section class="results-info">
-            <p id="resultsCount">Loading products...</p>
-        </section>
-
-        <!-- Products Grid -->
-        <section class="products-grid" id="productsGrid">
-            <!-- Products will be rendered here -->
-        </section>
-
-        <!-- Loading State -->
-        <div class="loading" id="loadingState">
-            <i class="fas fa-spinner fa-spin"></i> Loading products...
-        </div>
-
-        <!-- No Results State -->
-        <div class="no-results" id="noResults" style="display: none;">
-            <i class="fas fa-search"></i>
-            <h3>No products found</h3>
-            <p>Try adjusting your search or filters</p>
-        </div>
-    </main>
-
-    <!-- Cart Modal -->
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-modal-content">
-            <div class="cart-modal-header">
-                <h2><i class="fas fa-shopping-cart"></i> Shopping Cart</h2>
-                <button class="close-button" id="closeCart" aria-label="Close cart">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div class="cart-modal-body" id="cartItems">
-                <!-- Cart items will be rendered here -->
-            </div>
-
-            <div class="cart-modal-footer">
-                <div class="cart-summary">
-                    <div class="cart-total">
-                        <strong>Total:</strong>
-                        <strong id="cartTotal">$0.00</strong>
-                    </div>
-                    <p class="cart-item-count" id="cartItemCount">0 items</p>
-                </div>
-
-                <div class="checkout-form" id="checkoutForm">
-                    <input 
-                        type="text" 
-                        id="customerName" 
-                        placeholder="Your Name (optional)"
-                        aria-label="Customer name"
-                    >
-                    <textarea 
-                        id="orderNotes" 
-                        placeholder="Order notes (optional)"
-                        rows="3"
-                        aria-label="Order notes"
-                    ></textarea>
-                    <button 
-                        class="whatsapp-button" 
-                        id="sendWhatsAppButton"
-                        disabled
-                    >
-                        <i class="fab fa-whatsapp"></i> Send Order to WhatsApp
-                    </button>
-                </div>
-
-                <div class="empty-cart-message" id="emptyCartMessage">
-                    <i class="fas fa-shopping-cart"></i>
-                    <p>Your cart is empty</p>
-                </div>
-            </div>
-        </div>
+      <button class="cart-button" id="cartButton" aria-label="Open cart">
+        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
     </div>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 My Shop. All rights reserved.</p>
-            <p>
-                <a href="./admin/" target="_blank" rel="noopener">
-                    <i class="fas fa-lock"></i> Admin Login
-                </a>
-            </p>
+    <div class="container desktop-category-nav" id="desktopCategoryNav" aria-label="Categories"></div>
+  </header>
+
+  <aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="mobile-drawer-panel">
+      <div class="drawer-header">
+        <strong>Browse categories</strong>
+        <button class="icon-button" id="closeDrawer" aria-label="Close menu">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="mobile-category-nav" id="mobileCategoryNav"></div>
+    </div>
+  </aside>
+
+  <main class="container collection-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="./index.html">Home</a>
+      <span>/</span>
+      <span>Collections</span>
+      <span>/</span>
+      <strong id="breadcrumbCurrent">All Products</strong>
+    </nav>
+
+    <section class="collection-header" aria-labelledby="collectionTitle">
+      <h1 id="collectionTitle">All Products</h1>
+      <p>A curated edit of practical essentials and everyday upgrades.</p>
+    </section>
+
+    <section class="collection-toolbar" aria-label="Collection controls">
+      <div class="search-box">
+        <label class="sr-only" for="searchInput">Search products</label>
+        <input type="search" id="searchInput" placeholder="Search products..." aria-label="Search products">
+      </div>
+
+      <div class="toolbar-controls">
+        <label class="sr-only" for="sortSelect">Sort products</label>
+        <select id="sortSelect" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="title-asc">Name: A to Z</option>
+          <option value="newest">Newest</option>
+        </select>
+
+        <div class="view-toggle" role="group" aria-label="View options">
+          <button type="button" data-view-toggle="grid" class="active" aria-label="Grid view">
+            <i class="fas fa-grip" aria-hidden="true"></i>
+          </button>
+          <button type="button" data-view-toggle="list" aria-label="List view">
+            <i class="fas fa-list" aria-hidden="true"></i>
+          </button>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <!-- SweetAlert2 for notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <section class="collection-layout">
+      <aside class="filters-panel" aria-label="Filters">
+        <h2>Filters</h2>
 
-    <!-- Fuse.js for search -->
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+        <details class="filter-accordion" open>
+          <summary>Availability</summary>
+          <label class="sr-only" for="availabilityFilter">Filter by availability</label>
+          <select id="availabilityFilter">
+            <option value="">All</option>
+            <option value="in-stock">In Stock</option>
+            <option value="sold-out">Sold Out</option>
+          </select>
+        </details>
 
-    <!-- App Scripts (ES Modules) -->
-    <script type="module" src="./js/main.js"></script>
+        <details class="filter-accordion" open>
+          <summary>Price range</summary>
+          <label for="priceRange">Max Price: <strong id="priceValue">$200</strong></label>
+          <input type="range" id="priceRange" min="0" max="200" value="200" step="5" aria-describedby="priceValue">
+        </details>
+
+        <details class="filter-accordion" open>
+          <summary>Brand</summary>
+          <label class="sr-only" for="brandFilter">Filter by brand</label>
+          <select id="brandFilter">
+            <option value="">All Brands</option>
+          </select>
+        </details>
+
+        <details class="filter-accordion" open>
+          <summary>Category</summary>
+          <label class="sr-only" for="categoryFilter">Filter by category</label>
+          <select id="categoryFilter">
+            <option value="">All Categories</option>
+          </select>
+        </details>
+      </aside>
+
+      <div class="collection-results">
+        <section class="results-info">
+          <p id="resultsCount">Loading products...</p>
+        </section>
+
+        <section class="products-grid" id="productsGrid" aria-live="polite"></section>
+
+        <div class="pagination hidden" id="paginationControls" aria-label="Pagination"></div>
+
+        <div class="loading" id="loadingState">
+          <i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading products...
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <h3>No products found</h3>
+          <p>Try adjusting your search or filters.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="recently-viewed hidden" id="recentlyViewedSection" aria-labelledby="recentlyViewedHeading">
+      <h2 id="recentlyViewedHeading">Recently Viewed</h2>
+      <div class="products-grid" id="recentlyViewedGrid"></div>
+    </section>
+
+    <section class="newsletter-section" aria-labelledby="newsletterHeading">
+      <h2 id="newsletterHeading">Stay in the loop</h2>
+      <p>Get updates on new arrivals and promotions.</p>
+      <form class="newsletter-form" action="#" method="post">
+        <label class="sr-only" for="newsletterEmail">Email address</label>
+        <input id="newsletterEmail" type="email" placeholder="Email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </section>
+
+    <section class="social-section" aria-labelledby="socialHeading">
+      <h2 id="socialHeading">Follow us</h2>
+      <div class="social-links">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i> Instagram</a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i> Facebook</a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i> YouTube</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="cart-modal" id="cartModal" aria-hidden="true">
+    <div class="cart-modal-content" role="dialog" aria-modal="true" aria-label="Shopping cart">
+      <div class="cart-modal-header">
+        <h2><i class="fas fa-shopping-cart" aria-hidden="true"></i> Shopping Cart</h2>
+        <button class="close-button" id="closeCart" aria-label="Close cart">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="cart-modal-body" id="cartItems"></div>
+
+      <div class="cart-modal-footer">
+        <div class="cart-summary">
+          <div class="cart-total">
+            <strong>Total:</strong>
+            <strong id="cartTotal">$0.00</strong>
+          </div>
+          <p class="cart-item-count" id="cartItemCount">0 items</p>
+          <div class="free-shipping">
+            <p id="freeShippingText">Add $150.00 more for free delivery.</p>
+            <div class="free-shipping-track"><span id="freeShippingBar"></span></div>
+          </div>
+        </div>
+
+        <div class="checkout-form" id="checkoutForm">
+          <label class="sr-only" for="customerName">Your name</label>
+          <input type="text" id="customerName" placeholder="Your Name (optional)">
+          <label class="sr-only" for="orderNotes">Order notes</label>
+          <textarea id="orderNotes" placeholder="Order notes (optional)" rows="3"></textarea>
+          <button class="whatsapp-button" id="sendWhatsAppButton" disabled>
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Order to WhatsApp
+          </button>
+        </div>
+
+        <div class="empty-cart-message" id="emptyCartMessage">
+          <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+          <p>Your cart is empty</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h4>Shop</h4>
+        <a href="./index.html">All Products</a>
+        <a href="./brands.html">Shop by Brand</a>
+        <a href="./rewards.html">Promotions</a>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <a href="./contact.html">Contact</a>
+        <a href="./search.html">Search</a>
+        <a href="./rewards.html">Rewards</a>
+      </div>
+      <div>
+        <h4>Policies</h4>
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./refund.html">Refund Policy</a>
+        <a href="./terms.html">Terms of Service</a>
+      </div>
+      <div>
+        <h4>Admin</h4>
+        <a href="./admin/" target="_blank" rel="noopener"><i class="fas fa-lock" aria-hidden="true"></i> Admin Login</a>
+        <p>&copy; 2026 My Shop.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
