@@ -106,8 +106,8 @@ function renderAnnouncements(ann) {
     `<span class="announcement-item"><i class="${esc(it.icon)}"></i> ${esc(it.text)}</span>`
   ).join('');
 
-  // Include the countdown item if it exists in the DOM
-  const countdownItem = '<span class="announcement-item"><i class="fas fa-clock"></i> <strong>Beauty Sale Ends In:</strong> <span class="announcement-countdown">00d 00h 00m 00s</span></span>';
+  // Include the countdown item — use id="announcementCountdown" so main.js timer can target it
+  const countdownItem = '<span class="announcement-item"><i class="fas fa-clock"></i> <strong>Beauty Sale Ends In:</strong> <span id="announcementCountdown">00d 00h 00m 00s</span></span>';
 
   track.innerHTML = itemsHtml + countdownItem + itemsHtml + countdownItem;
 }

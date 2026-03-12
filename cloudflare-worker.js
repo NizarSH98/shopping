@@ -16,22 +16,39 @@
  */
 
 // ═══════════════════════════════════════════════
-//  CONFIGURATION — Change these!
+//  CONFIGURATION
 // ═══════════════════════════════════════════════
-const ADMIN_PASSWORD = 'GlowAdmin2026!'; // ← CHANGE THIS!
+const ADMIN_PASSWORD = 'GlowAdmin2026!'; // Fallback — prefer env.ADMIN_PASSWORD
 
 // ═══════════════════════════════════════════════
-//  AUTH HELPERS
+//  AUTH HELPERS (HMAC-signed tokens)
 // ═══════════════════════════════════════════════
-function generateToken() {
-  const payload = JSON.stringify({ r: Math.random(), t: Date.now() });
-  return btoa('ghAdmin:' + payload);
+async function getSigningKey(password) {
+  const enc = new TextEncoder().encode(password);
+  return crypto.subtle.importKey('raw', enc, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
 }
 
-function verifyToken(token) {
-  if (!token) return false;
-  try { return atob(token).startsWith('ghAdmin:'); }
-  catch { return false; }
+async function generateToken(password) {
+  const payload = JSON.stringify({ t: Date.now(), r: Math.random() });
+  const key = await getSigningKey(password);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload));
+  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sig)));
+  return btoa(JSON.stringify({ p: payload, s: sigB64 }));
+}
+
+async function verifyToken(token, password) {
+  try {
+    const decoded = JSON.parse(atob(token));
+    const key = await getSigningKey(password);
+    const sigBytes = Uint8Array.from(atob(decoded.s), c => c.charCodeAt(0));
+    const valid = await crypto.subtle.verify('HMAC', key, sigBytes, new TextEncoder().encode(decoded.p));
+    if (!valid) return false;
+    // Token expires after 24 hours
+    const data = JSON.parse(decoded.p);
+    return (Date.now() - data.t) < 24 * 60 * 60 * 1000;
+  } catch {
+    return false;
+  }
 }
 
 function unauthorized(corsHeaders) {
@@ -181,13 +198,15 @@ async function handleRequest(request, env) {
   }
 
   const KV = env.SITE_KV;
+  const password = env.ADMIN_PASSWORD || ADMIN_PASSWORD;
 
   // ─── AUTH: Login ───
   if (path === '/admin/login' && method === 'POST') {
     try {
-      const { password } = await request.json();
-      if (password === ADMIN_PASSWORD) {
-        return json({ success: true, token: generateToken() }, 200, corsHeaders);
+      const { password: inputPw } = await request.json();
+      if (inputPw === password) {
+        const token = await generateToken(password);
+        return json({ success: true, token }, 200, corsHeaders);
       }
       return json({ success: false, error: 'Invalid password' }, 401, corsHeaders);
     } catch (e) {
@@ -198,7 +217,8 @@ async function handleRequest(request, env) {
   // ─── AUTH: Check ───
   if (path === '/admin/check') {
     const token = (request.headers.get('Authorization') || '').replace('Bearer ', '');
-    return json({ success: verifyToken(token) }, verifyToken(token) ? 200 : 401, corsHeaders);
+    const valid = await verifyToken(token, password);
+    return json({ success: valid }, valid ? 200 : 401, corsHeaders);
   }
 
   // ─── PUBLIC: Get products ───
@@ -244,7 +264,7 @@ async function handleRequest(request, env) {
   // ─── ADMIN: Get content (any key) ───
   if (path.startsWith('/admin/content/') && method === 'GET') {
     const token = (request.headers.get('Authorization') || '').replace('Bearer ', '');
-    if (!verifyToken(token)) return unauthorized(corsHeaders);
+    if (!(await verifyToken(token, password))) return unauthorized(corsHeaders);
 
     const key = path.replace('/admin/content/', '');
     if (!VALID_KEYS.includes(key)) {
@@ -262,7 +282,7 @@ async function handleRequest(request, env) {
   // ─── ADMIN: Save content (any key) ───
   if (path.startsWith('/admin/content/') && method === 'POST') {
     const token = (request.headers.get('Authorization') || '').replace('Bearer ', '');
-    if (!verifyToken(token)) return unauthorized(corsHeaders);
+    if (!(await verifyToken(token, password))) return unauthorized(corsHeaders);
 
     const key = path.replace('/admin/content/', '');
     if (!VALID_KEYS.includes(key)) {
@@ -280,7 +300,7 @@ async function handleRequest(request, env) {
   // ─── ADMIN: Get all content at once ───
   if (path === '/admin/content' && method === 'GET') {
     const token = (request.headers.get('Authorization') || '').replace('Bearer ', '');
-    if (!verifyToken(token)) return unauthorized(corsHeaders);
+    if (!(await verifyToken(token, password))) return unauthorized(corsHeaders);
 
     try {
       const all = {};
@@ -297,7 +317,7 @@ async function handleRequest(request, env) {
   // ─── ADMIN: Bulk save all content ───
   if (path === '/admin/content' && method === 'POST') {
     const token = (request.headers.get('Authorization') || '').replace('Bearer ', '');
-    if (!verifyToken(token)) return unauthorized(corsHeaders);
+    if (!(await verifyToken(token, password))) return unauthorized(corsHeaders);
 
     try {
       const body = await request.json();
@@ -317,7 +337,7 @@ async function handleRequest(request, env) {
   // ─── ADMIN: Reset a section to defaults ───
   if (path.startsWith('/admin/reset/') && method === 'POST') {
     const token = (request.headers.get('Authorization') || '').replace('Bearer ', '');
-    if (!verifyToken(token)) return unauthorized(corsHeaders);
+    if (!(await verifyToken(token, password))) return unauthorized(corsHeaders);
 
     const key = path.replace('/admin/reset/', '');
     if (!VALID_KEYS.includes(key) || !DEFAULTS[key]) {
