@@ -1,8 +1,123 @@
 // UI Module
 // Handles DOM manipulation and rendering
 
-import { formatPrice } from './products.js';
+import {
+    formatPrice,
+    getCompareAtPrice,
+    getProductCtaState,
+    getStockState,
+    getEffectivePrice
+} from './products.js';
 import { CONFIG } from './config.js';
+
+/**
+ * Render announcement bar countdown text
+ * @param {string} value - countdown value
+ */
+export function updateAnnouncementCountdown(value) {
+    const countdown = document.getElementById('announcementCountdown');
+    if (countdown) {
+        countdown.textContent = value;
+    }
+}
+
+/**
+ * Create nested navigation tree for desktop and drawer
+ * @param {Array} categories - category tree
+ */
+export function renderCategoryNavigation(categories = []) {
+    const desktopContainer = document.getElementById('desktopCategoryNav');
+    const mobileContainer = document.getElementById('mobileCategoryNav');
+
+    if (desktopContainer) {
+        desktopContainer.innerHTML = '';
+        categories.forEach(group => {
+            const details = document.createElement('details');
+            details.className = 'nav-group';
+
+            const summary = document.createElement('summary');
+            summary.textContent = group.label;
+            details.appendChild(summary);
+
+            const list = document.createElement('ul');
+            (group.children || []).forEach(child => {
+                const item = document.createElement('li');
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'category-link';
+                button.dataset.category = child.category || '';
+                button.textContent = child.label;
+                item.appendChild(button);
+                list.appendChild(item);
+            });
+
+            details.appendChild(list);
+            desktopContainer.appendChild(details);
+        });
+    }
+
+    if (mobileContainer) {
+        mobileContainer.innerHTML = '';
+        categories.forEach(group => {
+            const details = document.createElement('details');
+            details.className = 'drawer-group';
+
+            const summary = document.createElement('summary');
+            summary.textContent = group.label;
+            details.appendChild(summary);
+
+            const list = document.createElement('ul');
+            (group.children || []).forEach(child => {
+                const item = document.createElement('li');
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'category-link';
+                button.dataset.category = child.category || '';
+                button.textContent = child.label;
+                item.appendChild(button);
+                list.appendChild(item);
+            });
+
+            details.appendChild(list);
+            mobileContainer.appendChild(details);
+        });
+    }
+}
+
+/**
+ * Toggle mobile drawer visibility
+ * @param {boolean} show - show/hide
+ */
+export function toggleMobileDrawer(show) {
+    const drawer = document.getElementById('mobileDrawer');
+    const trigger = document.getElementById('openDrawer');
+    if (!drawer) return;
+
+    drawer.classList.toggle('active', show);
+    drawer.setAttribute('aria-hidden', show ? 'false' : 'true');
+    document.body.classList.toggle('drawer-open', show);
+
+    if (trigger) {
+        trigger.setAttribute('aria-expanded', show ? 'true' : 'false');
+    }
+
+    if (show) {
+        drawer.querySelector('.category-link, #closeDrawer')?.focus();
+    } else {
+        trigger?.focus();
+    }
+}
+
+/**
+ * Update breadcrumb text
+ * @param {string} category - selected category
+ */
+export function updateBreadcrumb(category = '') {
+    const current = document.getElementById('breadcrumbCurrent');
+    if (current) {
+        current.textContent = category || 'All Products';
+    }
+}
 
 /**
  * Create a product card element
@@ -11,7 +126,7 @@ import { CONFIG } from './config.js';
  */
 export function createProductCard(product) {
     const card = document.createElement('article');
-    card.className = 'product-card';
+    card.className = 'product-card reveal-item';
     card.dataset.productId = product.id;
 
     // Image container
@@ -21,24 +136,35 @@ export function createProductCard(product) {
     const img = document.createElement('img');
     img.className = 'product-image';
     img.alt = product.name;
-    img.dataset.src = product.images[0]; // Lazy load
+    img.dataset.src = product.images?.[0] || '';
     img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%23f3f4f6"/%3E%3C/svg%3E';
-    imageContainer.appendChild(img);
+    const imageLink = document.createElement('a');
+    imageLink.href = `./product.html?id=${product.id}`;
+    imageLink.className = 'product-link';
+    imageLink.appendChild(img);
+    imageContainer.appendChild(imageLink);
 
-    // Badges
-    if (product.featured) {
+    const compareAt = getCompareAtPrice(product);
+    const currentPrice = getEffectivePrice(product);
+
+    if (compareAt) {
+        const percent = Math.round(((compareAt - currentPrice) / compareAt) * 100);
         const badge = document.createElement('span');
-        badge.className = 'product-badge featured';
-        badge.textContent = 'Featured';
+        badge.className = 'product-badge sale';
+        badge.textContent = `${percent}% OFF`;
         imageContainer.appendChild(badge);
     }
 
-    if (!product.in_stock) {
-        const badge = document.createElement('span');
-        badge.className = 'product-badge out-of-stock';
-        badge.textContent = 'Out of Stock';
-        imageContainer.appendChild(badge);
-    }
+    const stockState = getStockState(product);
+    const stockBadge = document.createElement('span');
+    stockBadge.className = `stock-pill ${stockState}`;
+    stockBadge.textContent =
+        stockState === 'sold-out'
+            ? 'Sold Out'
+            : stockState === 'low-stock'
+                ? 'Low Stock'
+                : 'In Stock';
+    imageContainer.appendChild(stockBadge);
 
     card.appendChild(imageContainer);
 
@@ -46,37 +172,64 @@ export function createProductCard(product) {
     const info = document.createElement('div');
     info.className = 'product-info';
 
-    const category = document.createElement('div');
-    category.className = 'product-category';
-    category.textContent = product.category;
-    info.appendChild(category);
+    const brand = document.createElement('div');
+    brand.className = 'product-brand';
+    brand.textContent = product.brand;
+    info.appendChild(brand);
 
     const name = document.createElement('h3');
     name.className = 'product-name';
-    name.textContent = product.name;
+    const nameLink = document.createElement('a');
+    nameLink.href = `./product.html?id=${product.id}`;
+    nameLink.className = 'product-link';
+    nameLink.textContent = product.name;
+    name.appendChild(nameLink);
     info.appendChild(name);
 
-    const description = document.createElement('p');
-    description.className = 'product-description';
-    description.textContent = product.description;
-    info.appendChild(description);
+    if (product.excerpt) {
+        const description = document.createElement('p');
+        description.className = 'product-description';
+        description.textContent = product.excerpt;
+        info.appendChild(description);
+    }
 
     // Footer
     const footer = document.createElement('div');
     footer.className = 'product-footer';
 
-    const price = document.createElement('div');
-    price.className = 'product-price';
-    price.textContent = formatPrice(product.price);
-    footer.appendChild(price);
+    const priceWrap = document.createElement('div');
+    priceWrap.className = 'product-pricing';
+
+    const currentPriceEl = document.createElement('div');
+    currentPriceEl.className = 'product-price current';
+    currentPriceEl.textContent = formatPrice(currentPrice);
+    priceWrap.appendChild(currentPriceEl);
+
+    if (compareAt) {
+        const comparePriceEl = document.createElement('div');
+        comparePriceEl.className = 'product-price compare';
+        comparePriceEl.textContent = formatPrice(compareAt);
+        priceWrap.appendChild(comparePriceEl);
+    }
+
+    footer.appendChild(priceWrap);
 
     const button = document.createElement('button');
+    const ctaState = getProductCtaState(product);
+
     button.className = 'add-to-cart-button';
     button.dataset.productId = product.id;
-    button.disabled = !product.in_stock;
-    button.innerHTML = product.in_stock 
-        ? '<i class="fas fa-cart-plus"></i> Add'
-        : 'Out of Stock';
+    button.dataset.ctaState = ctaState;
+
+    if (ctaState === 'sold-out') {
+        button.disabled = true;
+        button.textContent = 'Sold out';
+    } else if (ctaState === 'choose') {
+        button.textContent = 'Choose options';
+    } else {
+        button.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Bag';
+    }
+
     footer.appendChild(button);
 
     info.appendChild(footer);
@@ -99,13 +252,68 @@ export function renderProducts(products, container) {
     }
 
     // Create and append product cards
-    products.forEach(product => {
+    products.forEach((product, index) => {
         const card = createProductCard(product);
+        card.style.animationDelay = `${index * 30}ms`;
         container.appendChild(card);
     });
 
     // Initialize lazy loading
     initializeLazyLoading();
+}
+
+/**
+ * Render pagination controls
+ * @param {number} currentPage - selected page
+ * @param {number} totalPages - total pages
+ */
+export function renderPagination(currentPage, totalPages) {
+    const pagination = document.getElementById('paginationControls');
+    if (!pagination) return;
+
+    pagination.innerHTML = '';
+
+    if (totalPages <= 1) {
+        pagination.classList.add('hidden');
+        return;
+    }
+
+    pagination.classList.remove('hidden');
+
+    const createPageButton = (label, page, disabled = false, active = false) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `page-button ${active ? 'active' : ''}`;
+        button.textContent = label;
+        button.disabled = disabled;
+        button.dataset.page = page;
+        pagination.appendChild(button);
+    };
+
+    createPageButton('Prev', currentPage - 1, currentPage === 1);
+
+    for (let i = 1; i <= totalPages; i += 1) {
+        createPageButton(String(i), i, false, i === currentPage);
+    }
+
+    createPageButton('Next', currentPage + 1, currentPage === totalPages);
+}
+
+/**
+ * Toggle product view mode
+ * @param {'grid'|'list'} view - selected view
+ */
+export function setProductViewMode(view) {
+    const grid = document.getElementById('productsGrid');
+    const toggles = document.querySelectorAll('[data-view-toggle]');
+
+    if (grid) {
+        grid.classList.toggle('list-view', view === 'list');
+    }
+
+    toggles.forEach(toggle => {
+        toggle.classList.toggle('active', toggle.dataset.viewToggle === view);
+    });
 }
 
 /**
@@ -197,7 +405,7 @@ export function updateCartBadge(count) {
     const badge = document.getElementById('cartBadge');
     if (badge) {
         badge.textContent = count;
-        
+
         // Add animation
         badge.style.transform = 'scale(1.2)';
         setTimeout(() => {
@@ -237,9 +445,12 @@ export function toggleCartModal(show) {
     if (modal) {
         if (show) {
             modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            modal.querySelector('#closeCart')?.focus();
         } else {
             modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
         }
     }
@@ -328,6 +539,52 @@ function initializeLazyLoading() {
     images.forEach(img => imageObserver.observe(img));
 }
 
+
+/**
+ * Update free-shipping UI in cart summary
+ * @param {{threshold:number,remaining:number,progress:number,qualified:boolean}} data - progress metadata
+ */
+export function updateFreeShippingUI(data) {
+    const bar = document.getElementById('freeShippingBar');
+    const text = document.getElementById('freeShippingText');
+
+    if (bar) {
+        bar.style.width = `${data.progress || 0}%`;
+    }
+
+    if (text) {
+        if (data.qualified) {
+            text.textContent = 'You unlocked free delivery.';
+        } else {
+            text.textContent = `Add ${formatPrice(data.remaining)} more for free delivery.`;
+        }
+    }
+}
+
+/**
+ * Render recently viewed items
+ * @param {Array} products - recently viewed products
+ */
+export function renderRecentlyViewed(products = []) {
+    const section = document.getElementById('recentlyViewedSection');
+    const container = document.getElementById('recentlyViewedGrid');
+
+    if (!section || !container) return;
+
+    container.innerHTML = '';
+
+    if (products.length === 0) {
+        section.classList.add('hidden');
+        return;
+    }
+
+    section.classList.remove('hidden');
+    products.slice(0, 4).forEach(product => {
+        const card = createProductCard(product);
+        container.appendChild(card);
+    });
+}
+
 /**
  * Show notification toast
  * @param {string} message - Message to display
@@ -360,6 +617,24 @@ export function populateCategoryFilter(categories) {
         const option = document.createElement('option');
         option.value = category;
         option.textContent = category;
+        select.appendChild(option);
+    });
+}
+
+/**
+ * Populate brand filter dropdown
+ * @param {Array} brands - brand names
+ */
+export function populateBrandFilter(brands) {
+    const select = document.getElementById('brandFilter');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">All Brands</option>';
+
+    brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand;
+        option.textContent = brand;
         select.appendChild(option);
     });
 }
