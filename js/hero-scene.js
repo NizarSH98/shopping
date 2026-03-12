@@ -1,5 +1,5 @@
 /**
- * GlowHaven — 3D Molecular Hero Scene
+ * Glovio.lb — 3D Molecular Hero Scene
  * Three.js WebGL: luxury molecular structure with champagne-gold spheres,
  * warm metallic connectors, particle dust, bloom, mouse interaction.
  */

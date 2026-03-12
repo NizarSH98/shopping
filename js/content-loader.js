@@ -1,5 +1,5 @@
 /**
- * GlowHaven — Dynamic Content Loader
+ * Glovio.lb — Dynamic Content Loader
  * Fetches site content from Cloudflare Worker API and renders it into the page.
  * Falls back to whatever is already in the HTML if the API is unreachable.
  */

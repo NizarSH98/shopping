@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GlowHaven — Admin Dashboard</title>
+  <title>Glovio.lb — Admin Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -140,6 +140,23 @@
     .sidebar-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; }
     .sidebar-backdrop.active { display: block; }
     .mobile-menu-btn { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow); }
+
+    /* ── Icon Picker ── */
+    .icon-input-wrap { position: relative; }
+    .icon-input-wrap input { padding-left: 2.5rem; }
+    .icon-input-wrap .icon-preview { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 20px; text-align: center; color: var(--gold); font-size: 1rem; pointer-events: none; }
+    .icon-input-wrap .icon-picker-btn { position: absolute; right: 0.4rem; top: 50%; transform: translateY(-50%); background: rgba(201,169,110,0.12); border: 1px solid var(--border); border-radius: 4px; color: var(--gold); padding: 0.2rem 0.5rem; font-size: 0.7rem; cursor: pointer; font-family: inherit; }
+    .icon-input-wrap .icon-picker-btn:hover { background: rgba(201,169,110,0.25); }
+    .icon-picker-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 500; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow); max-height: 280px; overflow: hidden; margin-top: 4px; }
+    .icon-picker-dropdown.open { display: flex; flex-direction: column; }
+    .icon-picker-search { padding: 0.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-surface); }
+    .icon-picker-search input { font-size: 0.8rem; padding: 0.45rem 0.65rem; }
+    .icon-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 2px; padding: 0.5rem; overflow-y: auto; max-height: 230px; }
+    .icon-picker-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.4rem; border-radius: 4px; cursor: pointer; transition: all 0.15s; gap: 2px; }
+    .icon-picker-item:hover { background: rgba(201,169,110,0.15); }
+    .icon-picker-item.selected { background: rgba(201,169,110,0.25); outline: 1px solid var(--gold); }
+    .icon-picker-item i { font-size: 1.1rem; color: var(--text); }
+    .icon-picker-item span { font-size: 0.5rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; max-width: 100%; text-align: center; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -147,7 +164,7 @@
 <!-- ═════════════════════ LOGIN ═════════════════════ -->
 <div class="login-page" id="loginPage">
   <div class="login-card">
-    <h1><i class="fas fa-spa"></i> GlowHaven</h1>
+    <h1><i class="fas fa-spa"></i> Glovio.lb</h1>
     <p>Admin Dashboard — Enter your password to continue.</p>
     <div class="form-group">
       <label for="loginPassword">Password</label>
@@ -157,7 +174,7 @@
     <p class="error" id="loginError"><i class="fas fa-exclamation-circle"></i> Invalid password</p>
     <div class="form-group" style="margin-top:1rem;">
       <label for="apiUrlInput">API URL</label>
-      <input type="url" id="apiUrlInput" placeholder="https://your-worker.workers.dev" value="https://glowhaven-api.jabernizar98.workers.dev">
+      <input type="url" id="apiUrlInput" placeholder="https://your-worker.workers.dev" value="https://Glovio.lb-api.jabernizar98.workers.dev">
       <div class="form-hint">Your Cloudflare Worker URL</div>
     </div>
   </div>
@@ -167,7 +184,7 @@
 <div class="admin-layout hidden" id="adminLayout">
 
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand"><i class="fas fa-spa"></i> GlowHaven</div>
+    <div class="sidebar-brand"><i class="fas fa-spa"></i> Glovio.lb</div>
     <div class="nav-group-label">Overview</div>
     <button class="nav-item active" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
     <div class="nav-group-label">Content</div>
@@ -220,7 +237,7 @@
       <div class="card">
         <div class="card-header"><h3>Title &amp; Badge</h3></div>
         <div class="form-row">
-          <div class="form-group"><label>Badge Icon (FontAwesome)</label><input type="text" id="hero-badgeIcon" placeholder="fas fa-gem"></div>
+          <div class="form-group"><label>Badge Icon</label><input type="text" id="hero-badgeIcon" class="icon-input-static" placeholder="fas fa-gem"></div>
           <div class="form-group"><label>Badge Text</label><input type="text" id="hero-badge" placeholder="Premium Beauty Destination"></div>
         </div>
         <div class="form-row">
@@ -242,12 +259,12 @@
         <div class="form-row-3">
           <div class="form-group"><label>Primary Text</label><input type="text" id="hero-ctaPrimary-text"></div>
           <div class="form-group"><label>Primary Link</label><input type="text" id="hero-ctaPrimary-href"></div>
-          <div class="form-group"><label>Primary Icon</label><input type="text" id="hero-ctaPrimary-icon"></div>
+          <div class="form-group"><label>Primary Icon</label><input type="text" id="hero-ctaPrimary-icon" class="icon-input-static" placeholder="fas fa-arrow-right"></div>
         </div>
         <div class="form-row-3">
           <div class="form-group"><label>Secondary Text</label><input type="text" id="hero-ctaSecondary-text"></div>
           <div class="form-group"><label>Secondary Link</label><input type="text" id="hero-ctaSecondary-href"></div>
-          <div class="form-group"><label>Secondary Icon</label><input type="text" id="hero-ctaSecondary-icon"></div>
+          <div class="form-group"><label>Secondary Icon</label><input type="text" id="hero-ctaSecondary-icon" class="icon-input-static" placeholder="fas fa-play"></div>
         </div>
       </div>
     </div>
@@ -570,12 +587,14 @@ function populateHero() {
   document.getElementById('hero-ctaSecondary-href').value = h.ctaSecondary?.href || '';
   document.getElementById('hero-ctaSecondary-icon').value = h.ctaSecondary?.icon || '';
   renderHeroTrust(); renderHeroBrands();
+  // Refresh icon previews for static inputs
+  document.querySelectorAll('#sec-hero .icon-input-wrap input[id]').forEach(updateIconPreview);
 }
 function renderHeroTrust() {
   const items = siteData.hero?.trustItems || [];
   document.getElementById('heroTrustList').innerHTML = items.map((it, i) => `
     <div class="list-item"><div class="item-header"><strong>Badge #${i+1}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeHeroTrust(${i})"><i class="fas fa-trash"></i></button></div></div>
-    <div class="form-row"><div class="form-group"><label>Icon</label><input type="text" value="${esc(it.icon)}" onchange="siteData.hero.trustItems[${i}].icon=this.value"></div>
+    <div class="form-row"><div class="form-group"><label>Icon</label>${iconFieldHTML(it.icon, `siteData.hero.trustItems[${i}].icon=this.value`)}</div>
     <div class="form-group"><label>Text</label><input type="text" value="${esc(it.text)}" onchange="siteData.hero.trustItems[${i}].text=this.value"></div></div></div>`).join('');
 }
 function addHeroTrust() { if (!siteData.hero) siteData.hero = {}; if (!siteData.hero.trustItems) siteData.hero.trustItems = []; siteData.hero.trustItems.push({icon:'fas fa-check',text:'New Badge'}); renderHeroTrust(); }
@@ -597,7 +616,7 @@ function renderAnnouncements() {
   const items = siteData.announcements?.items || [];
   document.getElementById('announcementsList').innerHTML = items.map((it,i) => `
     <div class="list-item"><div class="item-header"><strong>Item #${i+1}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeAnnouncement(${i})"><i class="fas fa-trash"></i></button></div></div>
-    <div class="form-row"><div class="form-group"><label>Icon</label><input type="text" value="${esc(it.icon)}" onchange="siteData.announcements.items[${i}].icon=this.value"></div>
+    <div class="form-row"><div class="form-group"><label>Icon</label>${iconFieldHTML(it.icon, `siteData.announcements.items[${i}].icon=this.value`)}</div>
     <div class="form-group"><label>Text</label><input type="text" value="${esc(it.text)}" onchange="siteData.announcements.items[${i}].text=this.value"></div></div></div>`).join('');
 }
 function addAnnouncement() { if (!siteData.announcements) siteData.announcements = {items:[]}; siteData.announcements.items.push({icon:'fas fa-tag',text:'NEW ANNOUNCEMENT'}); renderAnnouncements(); }
@@ -611,7 +630,7 @@ function renderPromoBanners() {
     <div class="list-item"><div class="item-header"><strong>${esc(b.title)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removePromoBanner(${i})"><i class="fas fa-trash"></i></button></div></div>
     <div class="form-row-3"><div class="form-group"><label>Tag</label><input type="text" value="${esc(b.tag)}" onchange="siteData.promoBanners.banners[${i}].tag=this.value"></div>
     <div class="form-group"><label>Title</label><input type="text" value="${esc(b.title)}" onchange="siteData.promoBanners.banners[${i}].title=this.value"></div>
-    <div class="form-group"><label>Icon</label><input type="text" value="${esc(b.icon)}" onchange="siteData.promoBanners.banners[${i}].icon=this.value"></div></div>
+    <div class="form-group"><label>Icon</label>${iconFieldHTML(b.icon, `siteData.promoBanners.banners[${i}].icon=this.value`)}</div></div>
     <div class="form-group"><label>Description</label><textarea rows="2" onchange="siteData.promoBanners.banners[${i}].description=this.value">${esc(b.description)}</textarea></div>
     <div class="form-row-3"><div class="form-group"><label>CTA Text</label><input type="text" value="${esc(b.ctaText)}" onchange="siteData.promoBanners.banners[${i}].ctaText=this.value"></div>
     <div class="form-group"><label>Link</label><input type="text" value="${esc(b.href)}" onchange="siteData.promoBanners.banners[${i}].href=this.value"></div>
@@ -626,7 +645,7 @@ function renderWhyCards() {
   const cards = siteData.whySection?.cards || [];
   document.getElementById('whyCardsList').innerHTML = cards.map((c,i) => `
     <div class="list-item"><div class="item-header"><strong>${esc(c.title)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeWhyCard(${i})"><i class="fas fa-trash"></i></button></div></div>
-    <div class="form-row-3"><div class="form-group"><label>Icon</label><input type="text" value="${esc(c.icon)}" onchange="siteData.whySection.cards[${i}].icon=this.value"></div>
+    <div class="form-row-3"><div class="form-group"><label>Icon</label>${iconFieldHTML(c.icon, `siteData.whySection.cards[${i}].icon=this.value`)}</div>
     <div class="form-group"><label>Title</label><input type="text" value="${esc(c.title)}" onchange="siteData.whySection.cards[${i}].title=this.value"></div>
     <div class="form-group"><label>Description</label><input type="text" value="${esc(c.description)}" onchange="siteData.whySection.cards[${i}].description=this.value"></div></div></div>`).join('');
 }
@@ -672,7 +691,7 @@ function renderSocialList() {
     <div class="list-item"><div class="item-header"><strong>${esc(s.platform)}</strong><div class="item-actions"><button class="btn-icon delete" onclick="removeSocial(${i})"><i class="fas fa-trash"></i></button></div></div>
     <div class="form-row-3"><div class="form-group"><label>Platform</label><input type="text" value="${esc(s.platform)}" onchange="siteData.siteSettings.social[${i}].platform=this.value"></div>
     <div class="form-group"><label>URL</label><input type="text" value="${esc(s.href)}" onchange="siteData.siteSettings.social[${i}].href=this.value"></div>
-    <div class="form-group"><label>Icon</label><input type="text" value="${esc(s.icon)}" onchange="siteData.siteSettings.social[${i}].icon=this.value"></div></div></div>`).join('');
+    <div class="form-group"><label>Icon</label>${iconFieldHTML(s.icon, `siteData.siteSettings.social[${i}].icon=this.value`)}</div></div></div>`).join('');
 }
 function addSocial() { if (!siteData.siteSettings) siteData.siteSettings = {}; if (!siteData.siteSettings.social) siteData.siteSettings.social = []; siteData.siteSettings.social.push({platform:'New',href:'#',icon:'fab fa-link'}); renderSocialList(); }
 function removeSocial(i) { siteData.siteSettings.social.splice(i,1); renderSocialList(); }
@@ -830,6 +849,130 @@ async function deleteProduct(idx) {
 }
 
 document.getElementById('productModal').addEventListener('click', e => { if (e.target === document.getElementById('productModal')) closeProductModal(); });
+
+/* ═══════════════════════════════════════════════
+   ICON PICKER
+   ═══════════════════════════════════════════════ */
+const FA_ICONS = [
+  // Beauty / Cosmetics
+  'fas fa-gem','fas fa-magic','fas fa-wand-magic-sparkles','fas fa-spa','fas fa-pump-soap','fas fa-spray-can-sparkles',
+  'fas fa-eye-dropper','fas fa-flask','fas fa-leaf','fas fa-seedling','fas fa-fan','fas fa-water',
+  'fas fa-droplet','fas fa-heart','fas fa-face-smile','fas fa-face-grin-stars',
+  // Shopping / E-commerce
+  'fas fa-bag-shopping','fas fa-cart-shopping','fas fa-basket-shopping','fas fa-store','fas fa-shop',
+  'fas fa-tags','fas fa-tag','fas fa-percent','fas fa-receipt','fas fa-barcode','fas fa-credit-card',
+  'fas fa-money-bill-wave','fas fa-wallet','fas fa-gift','fas fa-box-open','fas fa-truck-fast',
+  // Stars / Badges
+  'fas fa-star','fas fa-crown','fas fa-award','fas fa-medal','fas fa-trophy','fas fa-certificate',
+  'fas fa-ribbon','fas fa-fire','fas fa-bolt','fas fa-sparkles',
+  // Communication
+  'fas fa-comment','fas fa-comments','fas fa-envelope','fas fa-paper-plane','fas fa-phone',
+  'fas fa-headset','fas fa-bell','fas fa-bullhorn',
+  // Navigation / UI
+  'fas fa-arrow-right','fas fa-arrow-left','fas fa-chevron-right','fas fa-angles-right',
+  'fas fa-circle-arrow-right','fas fa-play','fas fa-circle-play',
+  // Trust / Security
+  'fas fa-shield-halved','fas fa-shield','fas fa-lock','fas fa-user-shield','fas fa-check',
+  'fas fa-check-circle','fas fa-circle-check','fas fa-thumbs-up','fas fa-handshake',
+  'fas fa-hand-holding-heart','fas fa-rotate-left','fas fa-clock-rotate-left',
+  // Misc
+  'fas fa-clock','fas fa-calendar','fas fa-sun','fas fa-moon','fas fa-palette','fas fa-paint-brush',
+  'fas fa-scissors','fas fa-feather','fas fa-wand-sparkles','fas fa-hat-wizard',
+  'fas fa-earth-americas','fas fa-globe','fas fa-location-dot','fas fa-map-pin',
+  'fas fa-info-circle','fas fa-circle-info','fas fa-question-circle',
+  'fas fa-lightbulb','fas fa-book','fas fa-graduation-cap','fas fa-users','fas fa-user',
+  'fas fa-image','fas fa-camera','fas fa-video','fas fa-music',
+  // Social (brands)
+  'fab fa-instagram','fab fa-facebook','fab fa-tiktok','fab fa-youtube','fab fa-whatsapp',
+  'fab fa-twitter','fab fa-x-twitter','fab fa-snapchat','fab fa-pinterest','fab fa-linkedin',
+  'fab fa-telegram','fab fa-discord',
+];
+
+/** Returns short label from full class e.g. "fas fa-gem" → "gem" */
+function iconLabel(cls) { return (cls || '').replace(/^fa[srlbdk]\s+fa-/, ''); }
+
+/** Build HTML for an icon field with picker. `val` = current value, `onchangeAttr` = JS onchange string */
+function iconFieldHTML(val, onchangeAttr) {
+  return `<div class="icon-input-wrap">
+    <span class="icon-preview"><i class="${esc(val)}"></i></span>
+    <input type="text" value="${esc(val)}" onchange="${onchangeAttr};updateIconPreview(this)" onfocus="openIconPicker(this)" placeholder="fas fa-star">
+    <button type="button" class="icon-picker-btn" onclick="openIconPicker(this.parentNode.querySelector('input'))">Browse</button>
+    <div class="icon-picker-dropdown">
+      <div class="icon-picker-search"><input type="text" placeholder="Search icons…" oninput="filterIcons(this)"></div>
+      <div class="icon-picker-grid">${FA_ICONS.map(ic => `<div class="icon-picker-item" data-icon="${ic}" onclick="pickIcon(this, '${ic}')"><i class="${ic}"></i><span>${iconLabel(ic)}</span></div>`).join('')}</div>
+    </div>
+  </div>`;
+}
+
+function openIconPicker(input) {
+  // Close all open pickers first
+  document.querySelectorAll('.icon-picker-dropdown.open').forEach(d => d.classList.remove('open'));
+  const dropdown = input.closest('.icon-input-wrap').querySelector('.icon-picker-dropdown');
+  // Highlight current selection
+  const cur = input.value.trim();
+  dropdown.querySelectorAll('.icon-picker-item').forEach(it => it.classList.toggle('selected', it.dataset.icon === cur));
+  // Reset search
+  const searchInput = dropdown.querySelector('.icon-picker-search input');
+  searchInput.value = '';
+  dropdown.querySelectorAll('.icon-picker-item').forEach(it => it.style.display = '');
+  dropdown.classList.add('open');
+  setTimeout(() => searchInput.focus(), 50);
+}
+
+function filterIcons(searchInput) {
+  const q = searchInput.value.toLowerCase();
+  const grid = searchInput.closest('.icon-picker-dropdown').querySelector('.icon-picker-grid');
+  grid.querySelectorAll('.icon-picker-item').forEach(it => {
+    it.style.display = it.dataset.icon.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function pickIcon(item, iconClass) {
+  const wrap = item.closest('.icon-input-wrap');
+  const input = wrap.querySelector('input[type="text"]');
+  input.value = iconClass;
+  input.dispatchEvent(new Event('change'));
+  updateIconPreview(input);
+  item.closest('.icon-picker-dropdown').classList.remove('open');
+}
+
+function updateIconPreview(input) {
+  const preview = input.closest('.icon-input-wrap')?.querySelector('.icon-preview');
+  if (preview) preview.innerHTML = `<i class="${input.value}"></i>`;
+}
+
+// Close picker when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.icon-input-wrap')) {
+    document.querySelectorAll('.icon-picker-dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
+
+/** Initialize icon pickers on static (non-dynamic) icon inputs */
+function initStaticIconPickers() {
+  document.querySelectorAll('.icon-input-static').forEach(input => {
+    const parent = input.parentElement;
+    const val = input.value || '';
+    const id = input.id;
+    const wrap = document.createElement('div');
+    wrap.className = 'icon-input-wrap';
+    wrap.innerHTML = `
+      <span class="icon-preview"><i class="${val}"></i></span>
+      <button type="button" class="icon-picker-btn" onclick="openIconPicker(this.parentNode.querySelector('input'))">Browse</button>
+      <div class="icon-picker-dropdown">
+        <div class="icon-picker-search"><input type="text" placeholder="Search icons…" oninput="filterIcons(this)"></div>
+        <div class="icon-picker-grid">${FA_ICONS.map(ic => `<div class="icon-picker-item" data-icon="${ic}" onclick="pickIcon(this, '${ic}')"><i class="${ic}"></i><span>${iconLabel(ic)}</span></div>`).join('')}</div>
+      </div>`;
+    input.classList.remove('icon-input-static');
+    input.setAttribute('onfocus', 'openIconPicker(this)');
+    input.setAttribute('onchange', `updateIconPreview(this)`);
+    parent.insertBefore(wrap, input);
+    wrap.insertBefore(input, wrap.querySelector('.icon-picker-btn'));
+  });
+}
+
+// Run once DOM is ready
+initStaticIconPickers();
 </script>
 </body>
 </html>

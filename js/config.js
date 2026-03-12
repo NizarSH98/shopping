@@ -18,7 +18,7 @@ export const CONFIG = {
 
     // Site Configuration
     site: {
-        name: 'GlowHaven',
+        name: 'Glovio.lb',
         description: 'Your Beauty Destination — Skincare, Makeup & More',
         // GitHub Pages base path (set to '' if using custom domain)
         // For project sites: '/repository-name'

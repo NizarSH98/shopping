@@ -4,7 +4,7 @@
  * No heavy dependencies — just reads from localStorage.
  */
 (function() {
-  const STORAGE_KEY = 'glowhavenCart';
+  const STORAGE_KEY = 'shopping_cart';
 
   function getCartCount() {
     try {

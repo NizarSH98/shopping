@@ -1,5 +1,5 @@
 /**
- * GlowHaven — Unified Cloudflare Worker
+ * Glovio.lb — Unified Cloudflare Worker
  * Handles: Authentication, Products CRUD, Site Content Management
  * Storage: Cloudflare KV (SITE_KV namespace)
  *
@@ -134,7 +134,7 @@ const DEFAULTS = {
     ],
   },
   whySection: {
-    title: 'Why Shop with GlowHaven?',
+    title: 'Why Shop with Glovio.lb?',
     cards: [
       { icon: 'fas fa-shield-halved', title: 'Guaranteed Authentic', description: 'Every product sourced directly from authorized distributors. No fakes, ever.' },
       { icon: 'fas fa-leaf', title: 'Clean & Cruelty-Free', description: 'We prioritize brands committed to ethical and cruelty-free beauty standards.' },
@@ -152,18 +152,18 @@ const DEFAULTS = {
     ],
   },
   newsletter: {
-    title: 'Join the Glow Club ✨',
+    title: 'Join the Glovio Club ✨',
     subtitle: 'Get beauty tips, exclusive deals, and new arrival alerts straight to your inbox.',
   },
   siteSettings: {
-    name: 'GlowHaven',
+    name: 'Glovio.lb',
     description: 'Your Beauty Destination — Skincare, Makeup & More',
     footerDescription: 'Your trusted beauty destination. Authentic skincare, makeup, haircare & fragrances from the world\'s best brands.',
     whatsappNumber: '1234567890',
     currencyCode: 'USD',
     currencySymbol: '$',
     social: [
-      { platform: 'Instagram', href: '#', icon: 'fab fa-instagram' },
+      { platform: 'Instagram', href: 'https://www.instagram.com/glovio.lb/', icon: 'fab fa-instagram' },
       { platform: 'TikTok', href: '#', icon: 'fab fa-tiktok' },
       { platform: 'Facebook', href: '#', icon: 'fab fa-facebook-f' },
       { platform: 'YouTube', href: '#', icon: 'fab fa-youtube' },
@@ -353,12 +353,12 @@ async function handleRequest(request, env) {
 
   // ─── Root info ───
   return new Response(`
-    <!DOCTYPE html><html><head><meta charset="UTF-8"><title>GlowHaven API</title>
+    <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Glovio.lb API</title>
     <style>body{font-family:system-ui;max-width:700px;margin:2rem auto;padding:0 2rem;line-height:1.6}
     h1{color:#c9a96e}code{background:#f3f4f6;padding:2px 6px;border-radius:4px}
     .ep{background:#f9fafb;padding:1rem;margin:.5rem 0;border-left:4px solid #c9a96e;border-radius:4px}</style>
     </head><body>
-    <h1>✨ GlowHaven API</h1>
+    <h1>✨ Glovio.lb API</h1>
     <h3>Public</h3>
     <div class="ep"><code>GET /api/products</code> — All products</div>
     <div class="ep"><code>GET /api/content</code> — All site content</div>
