@@ -192,3 +192,27 @@ export function generateWhatsAppUrl(message) {
     const encodedMessage = encodeURIComponent(message);
     return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 }
+
+
+/**
+ * Get free shipping progress metadata
+ * @returns {{threshold:number,remaining:number,progress:number,qualified:boolean}}
+ */
+export function getFreeShippingProgress() {
+    const threshold = CONFIG.cart.freeShippingThreshold || 0;
+    const total = getCartTotal();
+
+    if (threshold <= 0) {
+        return { threshold: 0, remaining: 0, progress: 100, qualified: true };
+    }
+
+    const remaining = Math.max(0, threshold - total);
+    const progress = Math.min(100, Math.round((total / threshold) * 100));
+
+    return {
+        threshold,
+        remaining,
+        progress,
+        qualified: remaining === 0
+    };
+}
